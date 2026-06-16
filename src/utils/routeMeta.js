@@ -7,6 +7,11 @@ const DETAIL_ROUTES = [
     titleKey: "pages.userDetails.title"
   },
   {
+    test: (pathname) => /^\/app\/pets\/[^/]+$/.test(pathname),
+    sectionKey: "nav.pets",
+    titleKey: "pages.petDetails.title"
+  },
+  {
     test: (pathname) => /^\/app\/products\/[^/]+$/.test(pathname),
     sectionKey: "nav.products",
     titleKey: "pages.productDetails.title"

@@ -289,6 +289,28 @@
       "title": "Pets",
       "subtitle": "Manage user pet profiles"
     },
+    "petDetails": {
+      "title": "Pet Details",
+      "subtitle": "Pet profile and owner information",
+      "addPetTitle": "Add Pet Info",
+      "addPetSubtitle": "Complete your pet profile",
+      "petPhoto": "Pet Photo",
+      "petName": "Pet Name",
+      "petType": "Pet Type",
+      "breed": "Breed",
+      "gender": "Gender",
+      "age": "Age",
+      "ageYears": "{{count}} years",
+      "weight": "Weight (kg)",
+      "weightValue": "{{value}} kg",
+      "vetName": "Vet Name (Optional)",
+      "noPhoto": "No photo uploaded",
+      "backToPets": "Back to Pets",
+      "owner": "Owner",
+      "systemInfo": "System Information",
+      "notes": "Notes",
+      "updatedAt": "Last Updated"
+    },
     "products": {
       "title": "Products",
       "subtitle": "Create and manage product landing content",

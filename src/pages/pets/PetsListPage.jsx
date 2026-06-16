@@ -20,6 +20,7 @@ function PetsListPage() {
         update: ["pets.manage"],
         delete: ["pets.manage"]
       }}
+      getDetailPath={(row) => `/app/pets/${row.id}`}
       columns={[
         { key: "name", header: t("tables.name") },
         { key: "type", header: t("tables.type") },

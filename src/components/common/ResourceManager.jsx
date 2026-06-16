@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 import toast from "react-hot-toast";
 import DataTable from "../tables/DataTable";
@@ -78,8 +79,10 @@ function ResourceManager({
   formFields,
   searchPlaceholder = "Search...",
   permissionMap = {},
-  disableCreate = false
+  disableCreate = false,
+  getDetailPath
 }) {
+  const navigate = useNavigate();
   const { hasAnyPermission } = usePermissions();
   const { t } = useTranslation();
   const { page, setPage, params } = usePagination(1, DEFAULT_PAGE_SIZE);
@@ -104,6 +107,11 @@ function ResourceManager({
       header: t("common.actions"),
       render: (row) => (
         <TableActions>
+          {getDetailPath ? (
+            <TableActionButton icon="eye" onClick={() => navigate(getDetailPath(row))}>
+              {t("common.view")}
+            </TableActionButton>
+          ) : null}
           {canUpdate ? (
             <TableActionButton
               icon="pencil"
@@ -129,7 +137,7 @@ function ResourceManager({
         </TableActions>
       )
     }),
-    [canDelete, canUpdate, formFields, t]
+    [canDelete, canUpdate, formFields, getDetailPath, navigate, t]
   );
 
   const tableColumns = useMemo(() => {
@@ -141,11 +149,11 @@ function ResourceManager({
           }
         : column
     );
-    if (canUpdate || canDelete) {
+    if (canUpdate || canDelete || getDetailPath) {
       normalized.push(actionsColumn);
     }
     return normalized;
-  }, [columns, actionsColumn, canDelete, canUpdate]);
+  }, [columns, actionsColumn, canDelete, canUpdate, getDetailPath]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
