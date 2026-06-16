@@ -244,7 +244,10 @@
       "editTitle": "تعديل المستخدم",
       "deleteTitle": "حذف المستخدم",
       "updated": "تم تحديث المستخدم بنجاح",
-      "deleted": "تم حذف المستخدم بنجاح"
+      "deleted": "تم حذف المستخدم بنجاح",
+      "exportExcel": "تصدير Excel",
+      "exported": "تم تصدير المستخدمين إلى Excel",
+      "exporting": "جاري التصدير..."
     },
     "userDetails": {
       "title": "تفاصيل المستخدم",

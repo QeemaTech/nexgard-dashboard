@@ -244,7 +244,10 @@
       "editTitle": "Edit User",
       "deleteTitle": "Delete user",
       "updated": "User updated successfully",
-      "deleted": "User deleted successfully"
+      "deleted": "User deleted successfully",
+      "exportExcel": "Export Excel",
+      "exported": "Users exported to Excel",
+      "exporting": "Exporting..."
     },
     "userDetails": {
       "title": "User Details",

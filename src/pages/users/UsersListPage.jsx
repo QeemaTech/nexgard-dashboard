@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Download } from "lucide-react";
 import toast from "react-hot-toast";
 import usersApi from "../../api/usersApi";
 import usePagination from "../../hooks/usePagination";
 import useDebounce from "../../hooks/useDebounce";
 import useTranslation from "../../hooks/useTranslation";
 import PageHeader from "../../components/common/PageHeader";
+import Button from "../../components/common/Button";
 import FormInput from "../../components/forms/FormInput";
 import SelectInput from "../../components/forms/SelectInput";
 import DataTable from "../../components/tables/DataTable";
@@ -18,6 +20,10 @@ import Modal from "../../components/modals/Modal";
 import ModalForm from "../../components/modals/ModalForm";
 import ConfirmDialog from "../../components/modals/ConfirmDialog";
 import { formStatusOptions, userStatusSelectOptions } from "../../utils/i18nHelpers";
+import {
+  downloadUsersExcelBlob,
+  exportUsersExcelClient
+} from "../../utils/exportUsersExcel";
 
 const initialForm = {
   fullName: "",
@@ -41,6 +47,7 @@ function UsersListPage() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [deleting, setDeleting] = useState(null);
+  const [exporting, setExporting] = useState(false);
   const debouncedSearch = useDebounce(search);
 
   const load = useCallback(async () => {
@@ -89,6 +96,36 @@ function UsersListPage() {
       load();
     } catch (err) {
       toast.error(err.message);
+    }
+  }
+
+  async function exportExcel() {
+    setExporting(true);
+    const filters = {
+      search: debouncedSearch || undefined,
+      status: status || undefined,
+      city: city || undefined
+    };
+    const filename = `users-${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+    try {
+      const response = await usersApi.exportExcel(filters);
+      downloadUsersExcelBlob(
+        new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }),
+        filename
+      );
+      toast.success(t("pages.users.exported"));
+    } catch {
+      try {
+        await exportUsersExcelClient(usersApi, filters);
+        toast.success(t("pages.users.exported"));
+      } catch (err) {
+        toast.error(err.message);
+      }
+    } finally {
+      setExporting(false);
     }
   }
 
@@ -143,7 +180,16 @@ function UsersListPage() {
 
   return (
     <section>
-      <PageHeader title={t("pages.users.title")} subtitle={t("pages.users.subtitle")} />
+      <PageHeader
+        title={t("pages.users.title")}
+        subtitle={t("pages.users.subtitle")}
+        actions={
+          <Button variant="secondary" onClick={exportExcel} disabled={exporting}>
+            <Download className="h-4 w-4" />
+            {exporting ? t("pages.users.exporting") : t("pages.users.exportExcel")}
+          </Button>
+        }
+      />
       <DataTableToolbar>
         <FormInput
           placeholder={t("pages.users.searchPlaceholder")}
