@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { Download } from "lucide-react";
+import toast from "react-hot-toast";
 import PageHeader from "../../components/common/PageHeader";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
@@ -9,6 +11,7 @@ import FormInput from "../../components/forms/FormInput";
 import Button from "../../components/common/Button";
 import useTranslation from "../../hooks/useTranslation";
 import { tStatus } from "../../utils/i18nHelpers";
+import { downloadReportExcel } from "../../utils/exportReportExcel";
 
 function normalizeRows(data = {}) {
   if (Array.isArray(data.byStatus)) {
@@ -29,10 +32,11 @@ function normalizeRows(data = {}) {
   return [];
 }
 
-function ReportPageTemplate({ title, subtitle, fetcher }) {
+function ReportPageTemplate({ title, subtitle, fetcher, exportFileName = "report" }) {
   const { t } = useTranslation();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState({
     period: "30d",
@@ -85,9 +89,40 @@ function ReportPageTemplate({ title, subtitle, fetcher }) {
     ];
   }, [data, t]);
 
+  async function exportExcel() {
+    if (!rows.length) {
+      toast.error(t("pages.reports.noData"));
+      return;
+    }
+
+    setExporting(true);
+    try {
+      await downloadReportExcel({
+        rows,
+        columns,
+        filename: `${exportFileName}-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        sheetName: title
+      });
+      toast.success(t("pages.reports.exported"));
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <section>
-      <PageHeader title={title} subtitle={subtitle} />
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actions={
+          <Button variant="secondary" onClick={exportExcel} disabled={loading || exporting || !rows.length}>
+            <Download className="h-4 w-4" />
+            {exporting ? t("pages.reports.exporting") : t("pages.reports.exportExcel")}
+          </Button>
+        }
+      />
       <div className="mb-4 grid gap-3 md:grid-cols-4">
         <SelectInput
           value={filters.period}

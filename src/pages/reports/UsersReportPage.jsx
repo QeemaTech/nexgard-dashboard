@@ -8,6 +8,7 @@ function UsersReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.usersTitle")}
       subtitle={t("pages.reports.usersSubtitle")}
+      exportFileName="users-report"
       fetcher={reportsApi.users}
     />
   );

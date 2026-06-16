@@ -8,6 +8,7 @@ function ScansReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.scansTitle")}
       subtitle={t("pages.reports.scansSubtitle")}
+      exportFileName="scans-report"
       fetcher={reportsApi.scans}
     />
   );

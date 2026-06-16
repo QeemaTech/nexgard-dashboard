@@ -8,6 +8,7 @@ function ProductsReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.productsTitle")}
       subtitle={t("pages.reports.productsSubtitle")}
+      exportFileName="products-report"
       fetcher={reportsApi.products}
     />
   );

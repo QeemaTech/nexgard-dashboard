@@ -469,7 +469,11 @@
       "clinicsTitle": "تقرير العيادات",
       "clinicsSubtitle": "توزيع حالات العيادات والتحليلات",
       "pointsTitle": "تقرير النقاط",
-      "pointsSubtitle": "توزيع أنواع معاملات النقاط والتحليلات"
+      "pointsSubtitle": "توزيع أنواع معاملات النقاط والتحليلات",
+      "exportExcel": "تصدير Excel",
+      "exported": "تم تصدير التقرير إلى Excel",
+      "exporting": "جاري التصدير...",
+      "noData": "لا توجد بيانات للتصدير"
     },
     "adminUsers": {
       "title": "مستخدمي الإدارة",

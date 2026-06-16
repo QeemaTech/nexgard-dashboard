@@ -469,7 +469,11 @@
       "clinicsTitle": "Clinics Report",
       "clinicsSubtitle": "Clinic status distribution and analytics",
       "pointsTitle": "Points Report",
-      "pointsSubtitle": "Points transaction type distribution and analytics"
+      "pointsSubtitle": "Points transaction type distribution and analytics",
+      "exportExcel": "Export Excel",
+      "exported": "Report exported to Excel",
+      "exporting": "Exporting...",
+      "noData": "No report data to export"
     },
     "adminUsers": {
       "title": "Admin Users",

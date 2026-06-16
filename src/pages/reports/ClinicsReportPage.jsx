@@ -8,6 +8,7 @@ function ClinicsReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.clinicsTitle")}
       subtitle={t("pages.reports.clinicsSubtitle")}
+      exportFileName="clinics-report"
       fetcher={reportsApi.clinics}
     />
   );

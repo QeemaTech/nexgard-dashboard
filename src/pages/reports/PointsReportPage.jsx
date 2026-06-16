@@ -8,6 +8,7 @@ function PointsReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.pointsTitle")}
       subtitle={t("pages.reports.pointsSubtitle")}
+      exportFileName="points-report"
       fetcher={reportsApi.points}
     />
   );

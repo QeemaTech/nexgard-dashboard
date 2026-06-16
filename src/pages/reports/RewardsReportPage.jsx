@@ -8,6 +8,7 @@ function RewardsReportPage() {
     <ReportPageTemplate
       title={t("pages.reports.rewardsTitle")}
       subtitle={t("pages.reports.rewardsSubtitle")}
+      exportFileName="rewards-report"
       fetcher={reportsApi.rewards}
     />
   );
