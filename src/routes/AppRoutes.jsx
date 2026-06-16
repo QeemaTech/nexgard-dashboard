@@ -3,6 +3,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminLayout from "../layouts/AdminLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import LoginPage from "../pages/auth/LoginPage";
+import LogoutPage from "../pages/auth/LogoutPage";
 import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
 import NotFoundPage from "../pages/auth/NotFoundPage";
 import OverviewPage from "../pages/dashboard/OverviewPage";
@@ -43,6 +44,7 @@ function AppRoutes() {
       </Route>
 
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route path="/app" element={<AdminLayout />}>

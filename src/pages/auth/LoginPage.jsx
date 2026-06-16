@@ -8,6 +8,7 @@ import FormInput from "../../components/forms/FormInput";
 import Button from "../../components/common/Button";
 import BrandLoader from "../../components/common/BrandLoader";
 import LoginSuccessOverlay from "../../components/auth/LoginSuccessOverlay";
+import { getDefaultDashboardPath } from "../../utils/dashboardNavigation";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [nextPath, setNextPath] = useState("/app/overview");
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -28,7 +30,8 @@ function LoginPage() {
 
     setLoading(true);
     try {
-      await login(form);
+      const admin = await login(form);
+      setNextPath(getDefaultDashboardPath(admin?.permissions || []));
       setShowSuccess(true);
     } catch (error) {
       toast.error(error.message);
@@ -37,7 +40,7 @@ function LoginPage() {
   }
 
   function handleSuccessComplete() {
-    navigate("/app/overview", { replace: true });
+    navigate(nextPath, { replace: true });
   }
 
   function fillDemoCredentials() {

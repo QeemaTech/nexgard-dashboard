@@ -9,6 +9,7 @@ import FormInput from "../../components/forms/FormInput";
 import SelectInput from "../../components/forms/SelectInput";
 import DataTable from "../../components/tables/DataTable";
 import Button from "../../components/common/Button";
+import TableActions, { TableActionButton } from "../../components/tables/TableActions";
 import StatusBadge from "../../components/common/StatusBadge";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
@@ -55,10 +56,27 @@ function RedemptionsPage() {
     load();
   }, [load]);
 
+  function openVerify(code = "") {
+    setCodeInput(code);
+    setVerifyResult(null);
+    setVerifyModal(true);
+  }
+
+  function openUse(code = "") {
+    setCodeInput(code);
+    setClinicId("");
+    setUseModal(true);
+  }
+
   async function verifyCode(event) {
     event.preventDefault();
+    const code = codeInput.trim();
+    if (!code) {
+      toast.error(t("tables.code"));
+      return;
+    }
     try {
-      const response = await redeemApi.verify({ code: codeInput });
+      const response = await redeemApi.verify({ code });
       setVerifyResult(response.data.data);
       toast.success(t("pages.redemptions.verified"));
     } catch (err) {
@@ -69,8 +87,13 @@ function RedemptionsPage() {
 
   async function markAsUsed(event) {
     event.preventDefault();
+    const code = codeInput.trim();
+    if (!code) {
+      toast.error(t("tables.code"));
+      return;
+    }
     try {
-      await redeemApi.useCode({ code: codeInput, clinicId: clinicId || undefined });
+      await redeemApi.useCode({ code, clinicId: clinicId.trim() || undefined });
       toast.success(t("pages.redemptions.markedUsed"));
       setUseModal(false);
       setCodeInput("");
@@ -88,7 +111,21 @@ function RedemptionsPage() {
       { key: "user", header: t("tables.user"), render: (row) => row.redemption?.userId || "-" },
       { key: "clinic", header: t("tables.clinic"), render: (row) => row.clinic?.name || row.clinicId || "-" },
       { key: "status", header: t("tables.status"), render: (row) => <StatusBadge value={row.status} /> },
-      { key: "expiresAt", header: t("tables.expiry"), render: (row) => formatDateTime(row.expiresAt) }
+      { key: "expiresAt", header: t("tables.expiry"), render: (row) => formatDateTime(row.expiresAt) },
+      {
+        key: "actions",
+        header: t("common.actions"),
+        render: (row) => (
+          <TableActions>
+            <TableActionButton onClick={() => openVerify(row.code)}>
+              {t("pages.redemptions.verifyCode")}
+            </TableActionButton>
+            <TableActionButton onClick={() => openUse(row.code)}>
+              {t("pages.redemptions.useCode")}
+            </TableActionButton>
+          </TableActions>
+        )
+      }
     ],
     [t]
   );
@@ -100,10 +137,10 @@ function RedemptionsPage() {
         subtitle={t("pages.redemptions.subtitle")}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setVerifyModal(true)}>
+            <Button variant="secondary" onClick={() => openVerify()}>
               {t("pages.redemptions.verifyCode")}
             </Button>
-            <Button onClick={() => setUseModal(true)}>{t("pages.redemptions.useCode")}</Button>
+            <Button onClick={() => openUse()}>{t("pages.redemptions.useCode")}</Button>
           </>
         }
       />
@@ -140,6 +177,7 @@ function RedemptionsPage() {
             label={t("tables.code")}
             className="md:col-span-2"
             value={codeInput}
+            required
             onChange={(event) => setCodeInput(event.target.value)}
           />
         </ModalForm>
@@ -166,7 +204,12 @@ function RedemptionsPage() {
           submitLabel={t("pages.redemptions.useCode")}
           cancelLabel={t("common.cancel")}
         >
-          <FormInput label={t("tables.code")} value={codeInput} onChange={(event) => setCodeInput(event.target.value)} />
+          <FormInput
+            label={t("tables.code")}
+            value={codeInput}
+            required
+            onChange={(event) => setCodeInput(event.target.value)}
+          />
           <FormInput
             label={t("pages.redemptions.clinicIdOptional")}
             value={clinicId}
