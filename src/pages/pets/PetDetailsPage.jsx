@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Calendar, PawPrint, UserRound } from "lucide-react";
+import toast from "react-hot-toast";
+import { ArrowLeft, Calendar, PawPrint, Pencil, UserRound } from "lucide-react";
 import petsApi from "../../api/petsApi";
 import useTranslation from "../../hooks/useTranslation";
+import usePermissions from "../../hooks/usePermissions";
 import PageHeader from "../../components/common/PageHeader";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
 import Button from "../../components/common/Button";
+import Modal from "../../components/modals/Modal";
+import ModalForm from "../../components/modals/ModalForm";
+import PetEditForm from "../../components/pets/PetEditForm";
 import StatusBadge from "../../components/common/StatusBadge";
 import { Stagger, StaggerItem } from "../../components/motion/Stagger";
 import SpotlightCard from "../../components/motion/SpotlightCard";
 import { BorderBeam, GlareHover } from "../../components/reactbits";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import { tStatus } from "../../utils/i18nHelpers";
+import { initialPetForm, petFormToPayload, petRowToForm } from "../../utils/petForm";
 
 function DetailField({ label, value, children, muted = false, full = false }) {
   return (
@@ -64,25 +70,49 @@ function GenderPills({ value, t }) {
 function PetDetailsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { hasAnyPermission } = usePermissions();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState(initialPetForm);
+  const canUpdate = hasAnyPermission(["pets.manage"]);
+
+  async function load() {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await petsApi.getById(id);
+      setData(response.data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const response = await petsApi.getById(id);
-        setData(response.data.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    load();
   }, [id]);
+
+  async function submitEdit(event) {
+    event.preventDefault();
+    if (!data) return;
+    try {
+      const response = await petsApi.update(data.id, petFormToPayload(form));
+      setData((prev) => ({ ...prev, ...response.data.data }));
+      toast.success(t("pages.pets.updated"));
+      setEditing(false);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+
+  function openEdit() {
+    setForm(petRowToForm(data));
+    setEditing(true);
+  }
 
   const ageLabel =
     data?.age != null
@@ -100,10 +130,18 @@ function PetDetailsPage() {
         title={data?.name || t("pages.petDetails.title")}
         subtitle={t("pages.petDetails.subtitle")}
         actions={
-          <Button variant="secondary" size="sm" onClick={() => navigate("/app/pets")}>
-            <ArrowLeft className="h-4 w-4" />
-            {t("pages.petDetails.backToPets")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {canUpdate && data ? (
+              <Button variant="secondary" size="sm" onClick={openEdit}>
+                <Pencil className="h-4 w-4" />
+                {t("common.edit")}
+              </Button>
+            ) : null}
+            <Button variant="secondary" size="sm" onClick={() => navigate("/app/pets")}>
+              <ArrowLeft className="h-4 w-4" />
+              {t("pages.petDetails.backToPets")}
+            </Button>
+          </div>
         }
       />
       {loading ? <LoadingSpinner /> : null}
@@ -218,6 +256,17 @@ function PetDetailsPage() {
           </StaggerItem>
         </Stagger>
       ) : null}
+
+      <Modal isOpen={editing} title={t("pages.pets.editTitle")} onClose={() => setEditing(false)}>
+        <ModalForm
+          onSubmit={submitEdit}
+          onCancel={() => setEditing(false)}
+          submitLabel={t("common.save")}
+          cancelLabel={t("common.cancel")}
+        >
+          <PetEditForm form={form} setForm={setForm} t={t} />
+        </ModalForm>
+      </Modal>
     </section>
   );
 }

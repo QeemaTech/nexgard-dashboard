@@ -276,6 +276,7 @@
       "noRedemptions": "لا توجد عمليات استرداد بعد",
       "viewFacebook": "فيسبوك",
       "viewInstagram": "إنستغرام",
+      "profileImage": "رابط صورة الملف الشخصي",
       "registrationTitle": "بيانات التسجيل",
       "registrationSubtitle": "سجّل لتبدأ رحلة المكافآت",
       "password": "كلمة المرور",
@@ -290,7 +291,9 @@
     },
     "pets": {
       "title": "الحيوانات",
-      "subtitle": "إدارة ملفات حيوانات المستخدمين"
+      "subtitle": "إدارة ملفات حيوانات المستخدمين",
+      "editTitle": "تعديل الحيوان",
+      "updated": "تم تحديث الحيوان بنجاح"
     },
     "petDetails": {
       "title": "تفاصيل الحيوان",

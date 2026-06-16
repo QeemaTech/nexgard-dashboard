@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   ArrowLeft,
   Calendar,
@@ -7,6 +8,7 @@ import {
   Gift,
   MapPin,
   PawPrint,
+  Pencil,
   Phone,
   QrCode,
   Ticket,
@@ -14,6 +16,7 @@ import {
 } from "lucide-react";
 import usersApi from "../../api/usersApi";
 import useTranslation from "../../hooks/useTranslation";
+import usePermissions from "../../hooks/usePermissions";
 import PageHeader from "../../components/common/PageHeader";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
@@ -22,11 +25,15 @@ import StatCard from "../../components/common/StatCard";
 import DataTable from "../../components/tables/DataTable";
 import StatusBadge from "../../components/common/StatusBadge";
 import Button from "../../components/common/Button";
+import Modal from "../../components/modals/Modal";
+import ModalForm from "../../components/modals/ModalForm";
+import UserEditForm from "../../components/users/UserEditForm";
 import { Stagger, StaggerItem } from "../../components/motion/Stagger";
 import SpotlightCard from "../../components/motion/SpotlightCard";
 import { BorderBeam, GlareHover } from "../../components/reactbits";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import { tStatus } from "../../utils/i18nHelpers";
+import { initialUserForm, userFormToPayload, userRowToForm } from "../../utils/userForm";
 
 function getInitials(name) {
   if (!name) return "?";
@@ -76,26 +83,50 @@ function SocialLinkValue({ href }) {
 function UserDetailsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { hasAnyPermission } = usePermissions();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [tab, setTab] = useState("pets");
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState(initialUserForm);
+  const canUpdate = hasAnyPermission(["users.update"]);
+
+  async function load() {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await usersApi.getById(id);
+      setData(response.data.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const response = await usersApi.getById(id);
-        setData(response.data.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    load();
   }, [id]);
+
+  async function submitEdit(event) {
+    event.preventDefault();
+    if (!data) return;
+    try {
+      const response = await usersApi.update(data.id, userFormToPayload(form));
+      setData((prev) => ({ ...prev, ...response.data.data }));
+      toast.success(t("pages.users.updated"));
+      setEditing(false);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+
+  function openEdit() {
+    setForm(userRowToForm(data));
+    setEditing(true);
+  }
 
   const wallet = data?.pointsWallet;
 
@@ -199,10 +230,18 @@ function UserDetailsPage() {
         title={data?.fullName || t("pages.userDetails.title")}
         subtitle={t("pages.userDetails.subtitle")}
         actions={
-          <Button variant="secondary" size="sm" onClick={() => navigate("/app/users")}>
-            <ArrowLeft className="h-4 w-4" />
-            {t("pages.userDetails.backToUsers")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {canUpdate && data ? (
+              <Button variant="secondary" size="sm" onClick={openEdit}>
+                <Pencil className="h-4 w-4" />
+                {t("common.edit")}
+              </Button>
+            ) : null}
+            <Button variant="secondary" size="sm" onClick={() => navigate("/app/users")}>
+              <ArrowLeft className="h-4 w-4" />
+              {t("pages.userDetails.backToUsers")}
+            </Button>
+          </div>
         }
       />
       {loading ? <LoadingSpinner /> : null}
@@ -393,6 +432,17 @@ function UserDetailsPage() {
           </StaggerItem>
         </Stagger>
       ) : null}
+
+      <Modal isOpen={editing} title={t("pages.users.editTitle")} onClose={() => setEditing(false)}>
+        <ModalForm
+          onSubmit={submitEdit}
+          onCancel={() => setEditing(false)}
+          submitLabel={t("common.save")}
+          cancelLabel={t("common.cancel")}
+        >
+          <UserEditForm form={form} setForm={setForm} t={t} />
+        </ModalForm>
+      </Modal>
     </section>
   );
 }

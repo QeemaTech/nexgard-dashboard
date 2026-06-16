@@ -80,7 +80,9 @@ function ResourceManager({
   searchPlaceholder = "Search...",
   permissionMap = {},
   disableCreate = false,
-  getDetailPath
+  getDetailPath,
+  mapRowToForm,
+  preparePayload
 }) {
   const navigate = useNavigate();
   const { hasAnyPermission } = usePermissions();
@@ -117,12 +119,7 @@ function ResourceManager({
               icon="pencil"
               onClick={() => {
                 setEditingItem(row);
-                setForm(
-                  formFields.reduce((acc, field) => {
-                    acc[field.name] = row[field.name] ?? "";
-                    return acc;
-                  }, {})
-                );
+                setForm(mapRowToForm ? mapRowToForm(row) : buildInitialForm(formFields));
                 setOpenModal(true);
               }}
             >
@@ -137,7 +134,7 @@ function ResourceManager({
         </TableActions>
       )
     }),
-    [canDelete, canUpdate, formFields, getDetailPath, navigate, t]
+    [canDelete, canUpdate, formFields, getDetailPath, mapRowToForm, navigate, t]
   );
 
   const tableColumns = useMemo(() => {
@@ -184,12 +181,13 @@ function ResourceManager({
 
   async function submitForm(event) {
     event.preventDefault();
+    const payload = preparePayload ? preparePayload(form) : form;
     try {
       if (editingItem) {
-        await updateApi(editingItem.id, form);
+        await updateApi(editingItem.id, payload);
         toast.success(t("common.updated"));
       } else {
-        await createApi(form);
+        await createApi(payload);
         toast.success(t("common.created"));
       }
       resetModal();

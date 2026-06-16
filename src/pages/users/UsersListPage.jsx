@@ -19,19 +19,13 @@ import ErrorState from "../../components/common/ErrorState";
 import Modal from "../../components/modals/Modal";
 import ModalForm from "../../components/modals/ModalForm";
 import ConfirmDialog from "../../components/modals/ConfirmDialog";
-import { formStatusOptions, userStatusSelectOptions } from "../../utils/i18nHelpers";
+import UserEditForm from "../../components/users/UserEditForm";
+import { userStatusSelectOptions } from "../../utils/i18nHelpers";
 import {
   downloadUsersExcelBlob,
   exportUsersExcelClient
 } from "../../utils/exportUsersExcel";
-
-const initialForm = {
-  fullName: "",
-  email: "",
-  phone: "",
-  city: "",
-  status: "ACTIVE"
-};
+import { initialUserForm, userFormToPayload, userRowToForm } from "../../utils/userForm";
 
 function UsersListPage() {
   const { t } = useTranslation();
@@ -45,7 +39,7 @@ function UsersListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(initialUserForm);
   const [deleting, setDeleting] = useState(null);
   const [exporting, setExporting] = useState(false);
   const debouncedSearch = useDebounce(search);
@@ -77,10 +71,10 @@ function UsersListPage() {
     event.preventDefault();
     if (!editing) return;
     try {
-      await usersApi.update(editing.id, form);
+      await usersApi.update(editing.id, userFormToPayload(form));
       toast.success(t("pages.users.updated"));
       setEditing(null);
-      setForm(initialForm);
+      setForm(initialUserForm);
       load();
     } catch (err) {
       toast.error(err.message);
@@ -157,13 +151,7 @@ function UsersListPage() {
               icon="pencil"
               onClick={() => {
                 setEditing(row);
-                setForm({
-                  fullName: row.fullName || "",
-                  email: row.email || "",
-                  phone: row.phone || "",
-                  city: row.city || "",
-                  status: row.status || "ACTIVE"
-                });
+                setForm(userRowToForm(row));
               }}
             >
               {t("common.edit")}
@@ -227,32 +215,7 @@ function UsersListPage() {
           submitLabel={t("common.save")}
           cancelLabel={t("common.cancel")}
         >
-          <FormInput
-            label={t("tables.fullName")}
-            value={form.fullName}
-            onChange={(event) => setForm((prev) => ({ ...prev, fullName: event.target.value }))}
-          />
-          <FormInput
-            label={t("tables.email")}
-            value={form.email}
-            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-          />
-          <FormInput
-            label={t("tables.phone")}
-            value={form.phone}
-            onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
-          />
-          <FormInput
-            label={t("tables.city")}
-            value={form.city}
-            onChange={(event) => setForm((prev) => ({ ...prev, city: event.target.value }))}
-          />
-          <SelectInput
-            label={t("tables.status")}
-            value={form.status}
-            onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
-            options={formStatusOptions(t)}
-          />
+          <UserEditForm form={form} setForm={setForm} t={t} />
         </ModalForm>
       </Modal>
 

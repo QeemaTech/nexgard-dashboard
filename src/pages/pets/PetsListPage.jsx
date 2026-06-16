@@ -1,11 +1,13 @@
+import { useMemo } from "react";
 import ResourceManager from "../../components/common/ResourceManager";
 import petsApi from "../../api/petsApi";
 import StatusBadge from "../../components/common/StatusBadge";
 import useTranslation from "../../hooks/useTranslation";
-import { formGenderOptions, formPetTypeOptions } from "../../utils/i18nHelpers";
+import { getPetFormFields, petFormToPayload, petRowToForm } from "../../utils/petForm";
 
 function PetsListPage() {
   const { t } = useTranslation();
+  const formFields = useMemo(() => getPetFormFields(t), [t]);
 
   return (
     <ResourceManager
@@ -21,6 +23,8 @@ function PetsListPage() {
         delete: ["pets.manage"]
       }}
       getDetailPath={(row) => `/app/pets/${row.id}`}
+      mapRowToForm={petRowToForm}
+      preparePayload={petFormToPayload}
       columns={[
         { key: "name", header: t("tables.name") },
         { key: "type", header: t("tables.type") },
@@ -29,26 +33,7 @@ function PetsListPage() {
         { key: "user", header: t("tables.user"), render: (row) => row.user?.fullName || "-" },
         { key: "status", header: t("tables.status"), render: () => <StatusBadge value="ACTIVE" /> }
       ]}
-      formFields={[
-        { name: "name", label: t("tables.name") },
-        {
-          name: "type",
-          label: t("tables.type"),
-          type: "select",
-          options: formPetTypeOptions(t)
-        },
-        {
-          name: "gender",
-          label: t("tables.gender"),
-          type: "select",
-          options: formGenderOptions(t)
-        },
-        { name: "age", label: t("tables.age"), type: "number" },
-        { name: "weight", label: t("tables.weight"), type: "number" },
-        { name: "breed", label: t("tables.breed") },
-        { name: "vetName", label: t("tables.vetName") },
-        { name: "clinicId", label: t("tables.clinicId") }
-      ]}
+      formFields={formFields}
       searchPlaceholder={t("common.search")}
     />
   );

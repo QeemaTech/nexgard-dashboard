@@ -276,6 +276,7 @@
       "noRedemptions": "No reward redemptions yet",
       "viewFacebook": "Facebook",
       "viewInstagram": "Instagram",
+      "profileImage": "Profile Image URL",
       "registrationTitle": "Registration Details",
       "registrationSubtitle": "Sign up to start your rewards journey",
       "password": "Password",
@@ -290,7 +291,9 @@
     },
     "pets": {
       "title": "Pets",
-      "subtitle": "Manage user pet profiles"
+      "subtitle": "Manage user pet profiles",
+      "editTitle": "Edit Pet",
+      "updated": "Pet updated successfully"
     },
     "petDetails": {
       "title": "Pet Details",
