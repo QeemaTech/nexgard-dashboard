@@ -20,6 +20,7 @@ function ClinicsPage() {
         update: ["clinics.update"],
         delete: ["clinics.delete"]
       }}
+      getDetailPath={(row) => `/app/clinics/${row.id}`}
       columns={[
         { key: "name", header: t("tables.name") },
         { key: "phone", header: t("tables.phone") },

@@ -17,12 +17,17 @@ const ProductsListPage = lazyPage(() => import("../pages/products/ProductsListPa
 const ProductDetailsPage = lazyPage(() => import("../pages/products/ProductDetailsPage"), "pages.productDetails.title");
 const QRCodesPage = lazyPage(() => import("../pages/qrcodes/QRCodesPage"), "nav.qrcodes");
 const QRCodeDetailsPage = lazyPage(() => import("../pages/qrcodes/QRCodeDetailsPage"), "pages.qrcodeDetails.title");
+const ScansPage = lazyPage(() => import("../pages/scans/ScansPage"), "nav.scans");
+const ScanDetailsPage = lazyPage(() => import("../pages/scans/ScanDetailsPage"), "pages.scanDetails.title");
 const PointsPage = lazyPage(() => import("../pages/points/PointsPage"), "nav.points");
 const RewardsPage = lazyPage(() => import("../pages/rewards/RewardsPage"), "nav.rewards");
 const RedemptionsPage = lazyPage(() => import("../pages/redemptions/RedemptionsPage"), "nav.redemptions");
 const ClinicsPage = lazyPage(() => import("../pages/clinics/ClinicsPage"), "nav.clinics");
+const ClinicDetailsPage = lazyPage(() => import("../pages/clinics/ClinicDetailsPage"), "pages.clinicDetails.title");
 const DoctorsPage = lazyPage(() => import("../pages/doctors/DoctorsPage"), "nav.doctors");
+const DoctorDetailsPage = lazyPage(() => import("../pages/doctors/DoctorDetailsPage"), "pages.doctorDetails.title");
 const StoresPage = lazyPage(() => import("../pages/stores/StoresPage"), "nav.stores");
+const StoreDetailsPage = lazyPage(() => import("../pages/stores/StoreDetailsPage"), "pages.storeDetails.title");
 const NotificationsPage = lazyPage(() => import("../pages/notifications/NotificationsPage"), "nav.notifications");
 const SupportPage = lazyPage(() => import("../pages/support/SupportPage"), "nav.support");
 const UsersReportPage = lazyPage(() => import("../pages/reports/UsersReportPage"), "nav.reportsUsers");
@@ -34,6 +39,7 @@ const PointsReportPage = lazyPage(() => import("../pages/reports/PointsReportPag
 const AdminUsersPage = lazyPage(() => import("../pages/roles/AdminUsersPage"), "nav.adminUsers");
 const RolesPermissionsPage = lazyPage(() => import("../pages/roles/RolesPermissionsPage"), "nav.roles");
 const SettingsPage = lazyPage(() => import("../pages/settings/SettingsPage"), "nav.settings");
+const ProfilePage = lazyPage(() => import("../pages/profile/ProfilePage"), "pages.profile.title");
 
 function AppRoutes() {
   return (
@@ -68,6 +74,10 @@ function AppRoutes() {
             <Route path="qrcodes" element={<QRCodesPage />} />
             <Route path="qrcodes/:id" element={<QRCodeDetailsPage />} />
           </Route>
+          <Route element={<ProtectedRoute requiredPermissions={["scans.view"]} />}>
+            <Route path="scans" element={<ScansPage />} />
+            <Route path="scans/:id" element={<ScanDetailsPage />} />
+          </Route>
           <Route element={<ProtectedRoute requiredPermissions={["points.view"]} />}>
             <Route path="points" element={<PointsPage />} />
           </Route>
@@ -79,12 +89,15 @@ function AppRoutes() {
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["clinics.view"]} />}>
             <Route path="clinics" element={<ClinicsPage />} />
+            <Route path="clinics/:id" element={<ClinicDetailsPage />} />
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["doctors.view"]} />}>
             <Route path="doctors" element={<DoctorsPage />} />
+            <Route path="doctors/:id" element={<DoctorDetailsPage />} />
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["stores.view"]} />}>
             <Route path="stores" element={<StoresPage />} />
+            <Route path="stores/:id" element={<StoreDetailsPage />} />
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["notifications.view"]} />}>
             <Route path="notifications" element={<NotificationsPage />} />
@@ -109,6 +122,7 @@ function AppRoutes() {
           <Route element={<ProtectedRoute requiredPermissions={["settings.manage"]} />}>
             <Route path="settings" element={<SettingsPage />} />
           </Route>
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage embedded />} />
         </Route>
       </Route>

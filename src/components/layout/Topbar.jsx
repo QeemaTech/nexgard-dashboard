@@ -4,13 +4,13 @@ import useAuth from "../../hooks/useAuth";
 import useTranslation from "../../hooks/useTranslation";
 import { getRouteMeta } from "../../utils/routeMeta";
 import ThemeControls from "./ThemeControls";
+import Avatar from "../common/Avatar";
 
 function Topbar({ onToggleMobile, onToggleDesktop, desktopCollapsed, mobileOpen }) {
   const { admin } = useAuth();
   const { t, isRtl } = useTranslation();
   const { pathname } = useLocation();
   const { title, section } = getRouteMeta(pathname, t);
-  const avatarSeed = encodeURIComponent(admin?.fullName || admin?.email || "admin");
 
   return (
     <header className="topbar-panel relative z-50 flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4 sm:h-[4.5rem] sm:px-6 lg:h-20 lg:px-10">
@@ -73,13 +73,9 @@ function Topbar({ onToggleMobile, onToggleDesktop, desktopCollapsed, mobileOpen 
               {t("topbar.executiveAccess")}
             </p>
           </div>
-          <div className="avatar-ring h-10 w-10 overflow-hidden rounded-2xl p-0.5 sm:h-12 sm:w-12">
-            <img
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarSeed}&backgroundColor=eff6ff`}
-              alt={admin?.fullName || t("topbarExtra.adminProfile")}
-              className="h-full w-full rounded-xl object-cover"
-            />
-          </div>
+          <Link to="/app/profile" title={t("pages.profile.title")} className="rounded-2xl transition hover:opacity-90">
+            <Avatar name={admin?.fullName} image={admin?.profileImage} size="md" />
+          </Link>
         </div>
       </div>
     </header>

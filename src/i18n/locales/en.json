@@ -9,6 +9,7 @@
     "pets": "Pets",
     "products": "Products",
     "qrcodes": "QR Codes",
+    "scans": "Scans",
     "points": "Points",
     "rewards": "Rewards",
     "redemptions": "Redemptions",
@@ -27,7 +28,8 @@
     "reportsPoints": "Points Report",
     "adminUsers": "Admin Users",
     "roles": "Roles & Permissions",
-    "settings": "Settings"
+    "settings": "Settings",
+    "profile": "My Profile"
   },
   "topbar": {
     "controlCenter": "Control Center",
@@ -145,6 +147,8 @@
     "assignedClinics": "Assigned Clinics",
     "reward": "Reward",
     "clinic": "Clinic",
+    "doctor": "Doctor",
+    "store": "Store",
     "address": "Address",
     "location": "Location",
     "clinicId": "Clinic ID",
@@ -372,7 +376,35 @@
       "title": "QR Code Details",
       "subtitle": "Code metadata and scan history",
       "metadata": "Metadata",
-      "scanHistory": "Scan History"
+      "scanHistory": "Scan History",
+      "noScanHistory": "No scan attempts recorded for this code yet."
+    },
+    "scans": {
+      "title": "Scans",
+      "subtitle": "Review QR scan transactions and approve pending scans",
+      "searchPlaceholder": "Search by user, email, or QR code",
+      "backToList": "Back to Scans",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectTitle": "Reject Scan",
+      "approved": "Scan approved successfully",
+      "rejected": "Scan rejected successfully"
+    },
+    "scanDetails": {
+      "title": "Scan Details",
+      "subtitle": "Review scan metadata and purchase information",
+      "scanInfo": "Scan Information",
+      "purchaseInfo": "Purchase Information",
+      "reviewedAt": "Reviewed At",
+      "reviewer": "Reviewed By",
+      "rejectionReason": "Rejection Reason",
+      "sourceType": "Purchase Source",
+      "pet": "Pet",
+      "location": "Location",
+      "invoiceNumber": "Invoice Number",
+      "purchaseDate": "Purchase Date",
+      "notes": "Notes",
+      "viewUser": "View User Profile"
     },
     "points": {
       "title": "Points Management",
@@ -409,9 +441,12 @@
       "clinicUnassigned": "Clinic unassigned"
     },
     "redemptions": {
-      "title": "Redeem Codes",
+      "title": "Redemptions",
       "subtitle": "Verify and use reward redeem codes",
-      "searchPlaceholder": "Search by redeem code",
+      "rewardSubtitle": "Track user reward redemptions and their status",
+      "tabCodes": "Redeem Codes",
+      "tabRewards": "Reward Redemptions",
+      "searchPlaceholder": "Search by code, user, or reward",
       "verifyCode": "Verify Code",
       "useCode": "Use Code",
       "verifyTitle": "Verify Redeem Code",
@@ -424,13 +459,46 @@
       "title": "Clinics",
       "subtitle": "Manage clinics and their details"
     },
+    "clinicDetails": {
+      "title": "Clinic Details",
+      "subtitle": "Full clinic profile, staff, and activity",
+      "backToList": "Back to Clinics"
+    },
     "doctors": {
       "title": "Doctors",
       "subtitle": "Manage clinic doctors"
     },
+    "doctorDetails": {
+      "title": "Doctor Details",
+      "subtitle": "Doctor profile and related activity",
+      "backToList": "Back to Doctors"
+    },
     "stores": {
       "title": "Stores",
       "subtitle": "Manage stores and channels"
+    },
+    "storeDetails": {
+      "title": "Store Details",
+      "subtitle": "Store profile and purchase activity",
+      "backToList": "Back to Stores"
+    },
+    "facilityDetails": {
+      "contactInfo": "Contact Information",
+      "systemInfo": "System Information",
+      "relatedData": "Related Data",
+      "doctors": "Doctors",
+      "stores": "Stores",
+      "pets": "Pets",
+      "purchases": "Purchases",
+      "redemptions": "Redemptions",
+      "rewards": "Rewards",
+      "adminUsers": "Admin Users",
+      "country": "Country",
+      "coordinates": "Coordinates",
+      "createdAt": "Created At",
+      "updatedAt": "Last Updated",
+      "lastLogin": "Last Login",
+      "recentLimit": "Showing the 10 most recent records."
     },
     "notifications": {
       "title": "Notifications",
@@ -513,6 +581,18 @@
       "defaultLanguage": "Default Language",
       "saveSettings": "Save Settings",
       "updated": "Settings updated"
+    },
+    "profile": {
+      "title": "My Profile",
+      "subtitle": "Update your display name and profile photo",
+      "uploadAvatar": "Upload photo",
+      "removeAvatar": "Remove photo",
+      "avatarHint": "Click the avatar to upload a new profile photo",
+      "avatarFormats": "JPG, PNG or WebP · max 5 MB",
+      "saved": "Profile updated successfully",
+      "noChanges": "No changes to save",
+      "invalidImage": "Please choose a valid image file",
+      "imageTooLarge": "Image must be 5 MB or smaller"
     }
   },
   "overview": {

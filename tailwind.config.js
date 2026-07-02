@@ -19,21 +19,9 @@ export default {
         }
       },
       fontFamily: {
-        display: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "SF Pro Display",
-          "system-ui",
-          "sans-serif"
-        ],
-        body: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "SF Pro Text",
-          "system-ui",
-          "sans-serif"
-        ],
-        arabic: ["Segoe UI", "Tahoma", "Arial", "sans-serif"]
+        sans: ["Alexandria", "system-ui", "sans-serif"],
+        display: ["Alexandria", "system-ui", "sans-serif"],
+        body: ["Alexandria", "system-ui", "sans-serif"]
       },
       boxShadow: {
         card: "0 1px 2px 0 rgb(0 0 0 / 0.05)",

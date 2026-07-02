@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import redeemApi from "../../api/redeemApi";
+import redemptionsApi from "../../api/redemptionsApi";
 import usePagination from "../../hooks/usePagination";
 import useDebounce from "../../hooks/useDebounce";
 import useTranslation from "../../hooks/useTranslation";
@@ -21,6 +22,7 @@ import { formatDateTime } from "../../utils/formatDate";
 function RedemptionsPage() {
   const { t } = useTranslation();
   const { page, setPage, params } = usePagination();
+  const [tab, setTab] = useState("codes");
   const [rows, setRows] = useState([]);
   const [meta, setMeta] = useState(null);
   const [search, setSearch] = useState("");
@@ -38,7 +40,8 @@ function RedemptionsPage() {
     setLoading(true);
     setError("");
     try {
-      const response = await redeemApi.list({
+      const api = tab === "codes" ? redeemApi : redemptionsApi;
+      const response = await api.list({
         ...params,
         search: debouncedSearch || undefined,
         status: status || undefined
@@ -50,7 +53,7 @@ function RedemptionsPage() {
     } finally {
       setLoading(false);
     }
-  }, [params, debouncedSearch, status]);
+  }, [params, debouncedSearch, status, tab]);
 
   useEffect(() => {
     load();
@@ -104,11 +107,15 @@ function RedemptionsPage() {
     }
   }
 
-  const columns = useMemo(
+  const codeColumns = useMemo(
     () => [
       { key: "code", header: t("tables.code") },
       { key: "reward", header: t("tables.reward"), render: (row) => row.reward?.title || "-" },
-      { key: "user", header: t("tables.user"), render: (row) => row.redemption?.userId || "-" },
+      {
+        key: "user",
+        header: t("tables.user"),
+        render: (row) => row.redemption?.user?.fullName || row.redemption?.userId || "-"
+      },
       { key: "clinic", header: t("tables.clinic"), render: (row) => row.clinic?.name || row.clinicId || "-" },
       { key: "status", header: t("tables.status"), render: (row) => <StatusBadge value={row.status} /> },
       { key: "expiresAt", header: t("tables.expiry"), render: (row) => formatDateTime(row.expiresAt) },
@@ -130,20 +137,55 @@ function RedemptionsPage() {
     [t]
   );
 
+  const rewardColumns = useMemo(
+    () => [
+      { key: "user", header: t("tables.user"), render: (row) => row.user?.fullName || "-" },
+      { key: "reward", header: t("tables.reward"), render: (row) => row.reward?.title || "-" },
+      { key: "pointsSpent", header: t("tables.points"), render: (row) => row.pointsSpent ?? "-" },
+      { key: "clinic", header: t("tables.clinic"), render: (row) => row.clinic?.name || "-" },
+      {
+        key: "code",
+        header: t("tables.code"),
+        render: (row) => row.redeemCode?.code || "-"
+      },
+      { key: "status", header: t("tables.status"), render: (row) => <StatusBadge value={row.status} /> },
+      {
+        key: "requestedAt",
+        header: t("tables.date"),
+        render: (row) => formatDateTime(row.requestedAt)
+      }
+    ],
+    [t]
+  );
+
+  const columns = tab === "codes" ? codeColumns : rewardColumns;
+
   return (
     <section>
       <PageHeader
         title={t("pages.redemptions.title")}
-        subtitle={t("pages.redemptions.subtitle")}
+        subtitle={tab === "codes" ? t("pages.redemptions.subtitle") : t("pages.redemptions.rewardSubtitle")}
         actions={
-          <>
-            <Button variant="secondary" onClick={() => openVerify()}>
-              {t("pages.redemptions.verifyCode")}
-            </Button>
-            <Button onClick={() => openUse()}>{t("pages.redemptions.useCode")}</Button>
-          </>
+          tab === "codes" ? (
+            <>
+              <Button variant="secondary" onClick={() => openVerify()}>
+                {t("pages.redemptions.verifyCode")}
+              </Button>
+              <Button onClick={() => openUse()}>{t("pages.redemptions.useCode")}</Button>
+            </>
+          ) : null
         }
       />
+
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Button variant={tab === "codes" ? "primary" : "secondary"} onClick={() => { setTab("codes"); setPage(1); }}>
+          {t("pages.redemptions.tabCodes")}
+        </Button>
+        <Button variant={tab === "rewards" ? "primary" : "secondary"} onClick={() => { setTab("rewards"); setPage(1); }}>
+          {t("pages.redemptions.tabRewards")}
+        </Button>
+      </div>
+
       <div className="mb-4 grid gap-3 md:grid-cols-2">
         <FormInput
           placeholder={t("pages.redemptions.searchPlaceholder")}

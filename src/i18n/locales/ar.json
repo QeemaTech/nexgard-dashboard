@@ -9,6 +9,7 @@
     "pets": "الحيوانات",
     "products": "المنتجات",
     "qrcodes": "رموز QR",
+    "scans": "المسح",
     "points": "النقاط",
     "rewards": "المكافآت",
     "redemptions": "الاسترداد",
@@ -27,7 +28,8 @@
     "reportsPoints": "تقرير النقاط",
     "adminUsers": "مستخدمي الإدارة",
     "roles": "الأدوار والصلاحيات",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "profile": "ملفي الشخصي"
   },
   "topbar": {
     "controlCenter": "مركز التحكم",
@@ -372,7 +374,35 @@
       "title": "تفاصيل رمز QR",
       "subtitle": "بيانات الرمز وسجل المسح",
       "metadata": "البيانات الوصفية",
-      "scanHistory": "سجل المسح"
+      "scanHistory": "سجل المسح",
+      "noScanHistory": "لا توجد محاولات مسح مسجلة لهذا الرمز بعد."
+    },
+    "scans": {
+      "title": "المسح",
+      "subtitle": "مراجعة معاملات مسح QR والموافقة على المسح المعلق",
+      "searchPlaceholder": "بحث بالمستخدم أو البريد أو رمز QR",
+      "backToList": "العودة إلى المسح",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "rejectTitle": "رفض المسح",
+      "approved": "تمت الموافقة على المسح بنجاح",
+      "rejected": "تم رفض المسح بنجاح"
+    },
+    "scanDetails": {
+      "title": "تفاصيل المسح",
+      "subtitle": "مراجعة بيانات المسح ومعلومات الشراء",
+      "scanInfo": "معلومات المسح",
+      "purchaseInfo": "معلومات الشراء",
+      "reviewedAt": "تاريخ المراجعة",
+      "reviewer": "تمت المراجعة بواسطة",
+      "rejectionReason": "سبب الرفض",
+      "sourceType": "مصدر الشراء",
+      "pet": "الحيوان",
+      "location": "الموقع",
+      "invoiceNumber": "رقم الفاتورة",
+      "purchaseDate": "تاريخ الشراء",
+      "notes": "ملاحظات",
+      "viewUser": "عرض ملف المستخدم"
     },
     "points": {
       "title": "إدارة النقاط",
@@ -409,9 +439,12 @@
       "clinicUnassigned": "تم إلغاء تعيين العيادة"
     },
     "redemptions": {
-      "title": "أكواد الاسترداد",
+      "title": "الاسترداد",
       "subtitle": "التحقق من أكواد الاسترداد واستخدامها",
-      "searchPlaceholder": "بحث بكود الاسترداد",
+      "rewardSubtitle": "متابعة استردادات المكافآت وحالتها",
+      "tabCodes": "أكواد الاسترداد",
+      "tabRewards": "استردادات المكافآت",
+      "searchPlaceholder": "بحث بالكود أو المستخدم أو المكافأة",
       "verifyCode": "تحقق من الكود",
       "useCode": "استخدام الكود",
       "verifyTitle": "التحقق من كود الاسترداد",
@@ -424,13 +457,46 @@
       "title": "العيادات",
       "subtitle": "إدارة العيادات وبياناتها"
     },
+    "clinicDetails": {
+      "title": "تفاصيل العيادة",
+      "subtitle": "ملف العيادة الكامل والطاقم والنشاط",
+      "backToList": "العودة إلى العيادات"
+    },
     "doctors": {
       "title": "الأطباء",
       "subtitle": "إدارة أطباء العيادات"
     },
+    "doctorDetails": {
+      "title": "تفاصيل الطبيب",
+      "subtitle": "ملف الطبيب والنشاط المرتبط",
+      "backToList": "العودة إلى الأطباء"
+    },
     "stores": {
       "title": "المتاجر",
       "subtitle": "إدارة المتاجر وقنوات البيع"
+    },
+    "storeDetails": {
+      "title": "تفاصيل المتجر",
+      "subtitle": "ملف المتجر ونشاط المشتريات",
+      "backToList": "العودة إلى المتاجر"
+    },
+    "facilityDetails": {
+      "contactInfo": "معلومات الاتصال",
+      "systemInfo": "معلومات النظام",
+      "relatedData": "البيانات المرتبطة",
+      "doctors": "الأطباء",
+      "stores": "المتاجر",
+      "pets": "الحيوانات الأليفة",
+      "purchases": "المشتريات",
+      "redemptions": "الاستبدالات",
+      "rewards": "المكافآت",
+      "adminUsers": "مستخدمي الإدارة",
+      "country": "الدولة",
+      "coordinates": "الإحداثيات",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "آخر تحديث",
+      "lastLogin": "آخر تسجيل دخول",
+      "recentLimit": "عرض أحدث 10 سجلات."
     },
     "notifications": {
       "title": "الإشعارات",
@@ -513,6 +579,18 @@
       "defaultLanguage": "اللغة الافتراضية",
       "saveSettings": "حفظ الإعدادات",
       "updated": "تم تحديث الإعدادات"
+    },
+    "profile": {
+      "title": "ملفي الشخصي",
+      "subtitle": "تحديث الاسم وصورة الملف الشخصي",
+      "uploadAvatar": "رفع صورة",
+      "removeAvatar": "إزالة الصورة",
+      "avatarHint": "انقر على الصورة لرفع صورة ملف شخصي جديدة",
+      "avatarFormats": "JPG أو PNG أو WebP · بحد أقصى 5 ميجابايت",
+      "saved": "تم تحديث الملف الشخصي بنجاح",
+      "noChanges": "لا توجد تغييرات للحفظ",
+      "invalidImage": "يرجى اختيار ملف صورة صالح",
+      "imageTooLarge": "يجب أن يكون حجم الصورة 5 ميجابايت أو أقل"
     }
   },
   "overview": {

@@ -31,8 +31,8 @@ html[data-theme="light"] {
   --shadow-sidebar: 4px 0 24px rgb(15 23 42 / 0.04);
   --shadow-topbar: 0 1px 0 var(--border), 0 4px 16px rgb(15 23 42 / 0.03);
   --radius-card: 1rem;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --font-display: "Alexandria", system-ui, sans-serif;
+  --font-body: "Alexandria", system-ui, sans-serif;
   color-scheme: light;
 }
 
@@ -67,7 +67,7 @@ html[data-theme="dark"] {
 }
 
 html[dir="rtl"] body {
-  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 body {
