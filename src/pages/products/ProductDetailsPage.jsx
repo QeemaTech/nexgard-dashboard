@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { ArrowLeft, Pencil } from "lucide-react";
 import productsApi from "../../api/productsApi";
 import useTranslation from "../../hooks/useTranslation";
 import PageHeader from "../../components/common/PageHeader";
@@ -10,14 +11,34 @@ import Button from "../../components/common/Button";
 import TableActions, { TableActionButton } from "../../components/tables/TableActions";
 import { Stagger, StaggerItem } from "../../components/motion/Stagger";
 import FormInput from "../../components/forms/FormInput";
+import SelectInput from "../../components/forms/SelectInput";
 import Modal from "../../components/modals/Modal";
 import ModalForm from "../../components/modals/ModalForm";
 import TextArea from "../../components/forms/TextArea";
 import { formatDateTime } from "../../utils/formatDate";
 import { resolveMediaUrl } from "../../utils/mediaUrl";
+import { formStatusOptions } from "../../utils/i18nHelpers";
+
+const emptyForm = {
+  name: "",
+  slug: "",
+  shortDescription: "",
+  description: "",
+  strength: "",
+  suitableFor: "",
+  packContains: "",
+  activeIngredient: "",
+  pointValue: 0,
+  status: "ACTIVE",
+  mainImage: "",
+  images: [],
+  benefits: [],
+  infoItems: []
+};
 
 function ProductDetailsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,6 +50,42 @@ function ProductDetailsPage() {
   const [benefit, setBenefit] = useState({ title: "", description: "", sortOrder: 0 });
   const [editingBenefitId, setEditingBenefitId] = useState(null);
   const [infoRowsText, setInfoRowsText] = useState("[]");
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+
+  function openEdit() {
+    if (!data) return;
+    setForm({
+      name: data.name || "",
+      slug: data.slug || "",
+      shortDescription: data.shortDescription || "",
+      description: data.description || "",
+      strength: data.strength || "",
+      suitableFor: data.suitableFor || "",
+      packContains: data.packContains || "",
+      activeIngredient: data.activeIngredient || "",
+      pointValue: data.pointValue || 0,
+      status: data.status || "ACTIVE",
+      mainImage: data.mainImage || "",
+      images: data.images || [],
+      benefits: data.benefits || [],
+      infoItems: data.infoItems || []
+    });
+    setEditing(true);
+  }
+
+  async function submitEdit(event) {
+    event.preventDefault();
+    try {
+      const response = await productsApi.update(id, form);
+      setData(response.data.data);
+      toast.success(t("pages.products.updated"));
+      setEditing(false);
+      load();
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -129,7 +186,24 @@ function ProductDetailsPage() {
 
   return (
     <section>
-      <PageHeader title={t("pages.productDetails.title")} subtitle={t("pages.productDetails.subtitle")} />
+      <PageHeader
+        title={t("pages.productDetails.title")}
+        subtitle={t("pages.productDetails.subtitle")}
+        actions={
+          <div className="flex flex-wrap gap-2">
+            {data ? (
+              <Button variant="secondary" size="sm" onClick={openEdit}>
+                <Pencil className="h-4 w-4" />
+                {t("common.edit")}
+              </Button>
+            ) : null}
+            <Button variant="secondary" size="sm" onClick={() => navigate("/app/products")}>
+              <ArrowLeft className="h-4 w-4" />
+              {t("pages.productDetails.backToProducts")}
+            </Button>
+          </div>
+        }
+      />
       {loading ? <LoadingSpinner /> : null}
       {!loading && error ? <ErrorState message={error} /> : null}
       {!loading && !error && data ? (
@@ -287,6 +361,76 @@ function ProductDetailsPage() {
             className="md:col-span-2"
             value={benefit.description}
             onChange={(event) => setBenefit((prev) => ({ ...prev, description: event.target.value }))}
+          />
+        </ModalForm>
+      </Modal>
+
+      <Modal isOpen={editing} title={t("pages.products.editTitle")} onClose={() => setEditing(false)}>
+        <ModalForm
+          onSubmit={submitEdit}
+          onCancel={() => setEditing(false)}
+          submitLabel={t("common.save")}
+          cancelLabel={t("common.cancel")}
+        >
+          <FormInput
+            label={t("tables.name")}
+            value={form.name}
+            onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+          />
+          <FormInput
+            label={t("tables.slug")}
+            value={form.slug}
+            onChange={(event) => setForm((prev) => ({ ...prev, slug: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.products.pointValue")}
+            type="number"
+            value={form.pointValue}
+            onChange={(event) => setForm((prev) => ({ ...prev, pointValue: Number(event.target.value) }))}
+          />
+          <SelectInput
+            label={t("tables.status")}
+            value={form.status}
+            onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value }))}
+            options={formStatusOptions(t, ["ACTIVE", "INACTIVE"])}
+          />
+          <FormInput
+            label={t("pages.products.mainImage")}
+            className="md:col-span-2"
+            value={form.mainImage}
+            onChange={(event) => setForm((prev) => ({ ...prev, mainImage: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.products.strength")}
+            value={form.strength}
+            onChange={(event) => setForm((prev) => ({ ...prev, strength: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.products.suitableFor")}
+            value={form.suitableFor}
+            onChange={(event) => setForm((prev) => ({ ...prev, suitableFor: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.products.packContains")}
+            value={form.packContains}
+            onChange={(event) => setForm((prev) => ({ ...prev, packContains: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.products.activeIngredient")}
+            value={form.activeIngredient}
+            onChange={(event) => setForm((prev) => ({ ...prev, activeIngredient: event.target.value }))}
+          />
+          <TextArea
+            label={t("pages.products.shortDescription")}
+            className="md:col-span-2"
+            value={form.shortDescription}
+            onChange={(event) => setForm((prev) => ({ ...prev, shortDescription: event.target.value }))}
+          />
+          <TextArea
+            label={t("tables.description")}
+            className="md:col-span-2"
+            value={form.description}
+            onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
           />
         </ModalForm>
       </Modal>

@@ -340,6 +340,7 @@
       "mainImage": "Main Image URL"
     },
     "productDetails": {
+      "backToProducts": "Back to Products",
       "title": "Product Details",
       "subtitle": "Manage images, benefits, and info content",
       "images": "Product Images",
