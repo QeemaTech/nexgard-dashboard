@@ -19,6 +19,7 @@ import { BorderBeam, GlareHover } from "../../components/reactbits";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import { tStatus } from "../../utils/i18nHelpers";
 import { initialPetForm, petFormToPayload, petRowToForm } from "../../utils/petForm";
+import { resolveMediaUrl } from "../../utils/mediaUrl";
 
 function DetailField({ label, value, children, muted = false, full = false }) {
   return (
@@ -155,7 +156,7 @@ function PetDetailsPage() {
                   <div className="user-profile-hero">
                     <div className="pet-photo-preview" aria-hidden="true">
                       {data.photo ? (
-                        <img src={data.photo} alt={data.name} />
+                        <img src={resolveMediaUrl(data.photo)} alt={data.name} />
                       ) : (
                         <span className="pet-photo-placeholder">
                           <PawPrint className="h-8 w-8" />
@@ -204,7 +205,7 @@ function PetDetailsPage() {
                   <span className="signup-field-label">{t("pages.petDetails.petPhoto")}</span>
                   <div className="pet-photo-field">
                     {data.photo ? (
-                      <img src={data.photo} alt={data.name} className="pet-photo-field-image" />
+                      <img src={resolveMediaUrl(data.photo)} alt={data.name} className="pet-photo-field-image" />
                     ) : (
                       <div className="pet-photo-field-empty">
                         <PawPrint className="h-6 w-6 text-muted" />

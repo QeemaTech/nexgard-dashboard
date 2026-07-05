@@ -14,6 +14,7 @@ import Modal from "../../components/modals/Modal";
 import ModalForm from "../../components/modals/ModalForm";
 import TextArea from "../../components/forms/TextArea";
 import { formatDateTime } from "../../utils/formatDate";
+import { resolveMediaUrl } from "../../utils/mediaUrl";
 
 function ProductDetailsPage() {
   const { t } = useTranslation();
@@ -155,7 +156,7 @@ function ProductDetailsPage() {
                 <div className="grid gap-3 md:grid-cols-3">
                   {(data.images || []).map((image) => (
                     <div key={image.id} className="detail-item-card overflow-hidden">
-                      <img src={image.imageUrl} alt={data.name} className="h-32 w-full object-cover" />
+                      <img src={resolveMediaUrl(image.imageUrl)} alt={data.name} className="h-32 w-full object-cover" />
                       <div className="flex justify-end border-t border-default p-2">
                         <TableActionButton icon="trash" variant="danger" onClick={() => removeImage(image.id)}>
                           {t("common.delete")}

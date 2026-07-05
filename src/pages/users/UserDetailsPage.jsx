@@ -34,6 +34,7 @@ import { BorderBeam, GlareHover } from "../../components/reactbits";
 import { formatDate, formatDateTime } from "../../utils/formatDate";
 import { tStatus } from "../../utils/i18nHelpers";
 import { initialUserForm, userFormToPayload, userRowToForm } from "../../utils/userForm";
+import { resolveMediaUrl } from "../../utils/mediaUrl";
 
 function getInitials(name) {
   if (!name) return "?";
@@ -255,7 +256,7 @@ function UserDetailsPage() {
                   <div className="user-profile-hero">
                     <div className="user-avatar" aria-hidden="true">
                       {data.profileImage ? (
-                        <img src={data.profileImage} alt={data.fullName} />
+                        <img src={resolveMediaUrl(data.profileImage)} alt={data.fullName} />
                       ) : (
                         getInitials(data.fullName)
                       )}
