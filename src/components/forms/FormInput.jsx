@@ -1,4 +1,4 @@
-function FormInput({ label, error, icon: Icon, className = "", ...props }) {
+function FormInput({ label, error, hint, icon: Icon, className = "", ...props }) {
   return (
     <label className={`form-field block ${className}`}>
       {label ? <span className="form-label mb-2 block">{label}</span> : null}
@@ -8,6 +8,7 @@ function FormInput({ label, error, icon: Icon, className = "", ...props }) {
         ) : null}
         <input className={`input-field ${Icon ? "input-field-with-icon" : ""}`} {...props} />
       </div>
+      {hint ? <span className="mt-1 block text-xs text-muted">{hint}</span> : null}
       {error ? <span className="form-error mt-1 block">{error}</span> : null}
     </label>
   );
