@@ -153,6 +153,8 @@
     "address": "Address",
     "location": "Location",
     "clinicId": "Clinic ID",
+    "selectClinic": "Select a clinic",
+    "noClinicOptional": "No clinic (optional)",
     "age": "Age",
     "weight": "Weight",
     "breed": "Breed",
@@ -368,6 +370,10 @@
       "searchPlaceholder": "Search by code",
       "generateTitle": "Generate QR Codes",
       "exportExcel": "Export Excel",
+      "exportTitle": "Export QR Codes",
+      "exportBatchHint": "Leave blank to include all batches",
+      "exportDateFrom": "Created From",
+      "exportDateTo": "Created To",
       "generateBtn": "Generate QR Codes",
       "generated": "QR codes generated",
       "exported": "Excel exported",
@@ -457,6 +463,8 @@
       "verifyTitle": "Verify Redeem Code",
       "useTitle": "Use Redeem Code",
       "clinicIdOptional": "Clinic ID (optional)",
+      "clinicRequired": "Clinic is required",
+      "clinicLockedHint": "Locked to your assigned clinic",
       "verified": "Code verified",
       "markedUsed": "Code marked as used",
       "successTitle": "Points Updated",
@@ -466,7 +474,8 @@
     },
     "clinics": {
       "title": "Clinics",
-      "subtitle": "Manage clinics and their details"
+      "subtitle": "Manage clinics and their details",
+      "passwordHint": "Optional — creates a dashboard login for this clinic with the CLINIC_ADMIN role"
     },
     "clinicDetails": {
       "title": "Clinic Details",
@@ -475,7 +484,8 @@
     },
     "doctors": {
       "title": "Doctors",
-      "subtitle": "Manage clinic doctors"
+      "subtitle": "Manage clinic doctors",
+      "passwordHint": "Optional — creates a dashboard login for this doctor with the DOCTOR role"
     },
     "doctorDetails": {
       "title": "Doctor Details",

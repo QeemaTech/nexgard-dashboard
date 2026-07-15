@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import redeemApi from "../../api/redeemApi";
 import redemptionsApi from "../../api/redemptionsApi";
 import usePagination from "../../hooks/usePagination";
 import useDebounce from "../../hooks/useDebounce";
 import useTranslation from "../../hooks/useTranslation";
+import useAuth from "../../hooks/useAuth";
+import useClinicOptions from "../../hooks/useClinicOptions";
 import PageHeader from "../../components/common/PageHeader";
 import FormInput from "../../components/forms/FormInput";
 import SelectInput from "../../components/forms/SelectInput";
@@ -22,6 +25,7 @@ import { formatDateTime } from "../../utils/formatDate";
 
 function RedemptionsPage() {
   const { t } = useTranslation();
+  const { admin } = useAuth();
   const { page, setPage, params } = usePagination();
   const [tab, setTab] = useState("codes");
   const [rows, setRows] = useState([]);
@@ -37,6 +41,20 @@ function RedemptionsPage() {
   const [clinicId, setClinicId] = useState("");
   const [verifyResult, setVerifyResult] = useState(null);
   const [successResult, setSuccessResult] = useState(null);
+  const clinics = useClinicOptions();
+
+  const isClinicLocked = Boolean(admin?.clinicId);
+  const lockedClinicName = useMemo(
+    () => clinics.find((clinic) => clinic.id === admin?.clinicId)?.name || admin?.clinicId || "",
+    [clinics, admin?.clinicId]
+  );
+  const clinicSelectOptions = useMemo(
+    () => [
+      { value: "", label: t("tables.selectClinic") },
+      ...clinics.map((clinic) => ({ value: clinic.id, label: clinic.name }))
+    ],
+    [clinics, t]
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -69,7 +87,7 @@ function RedemptionsPage() {
 
   function openUse(code = "") {
     setCodeInput(code);
-    setClinicId("");
+    setClinicId(admin?.clinicId || "");
     setUseModal(true);
   }
 
@@ -97,8 +115,12 @@ function RedemptionsPage() {
       toast.error(t("tables.code"));
       return;
     }
+    if (!clinicId) {
+      toast.error(t("pages.redemptions.clinicRequired"));
+      return;
+    }
     try {
-      const response = await redeemApi.useCode({ code, clinicId: clinicId.trim() || undefined });
+      const response = await redeemApi.useCode({ code, clinicId });
       toast.success(t("pages.redemptions.markedUsed"));
       setUseModal(false);
       setCodeInput("");
@@ -262,11 +284,24 @@ function RedemptionsPage() {
             required
             onChange={(event) => setCodeInput(event.target.value)}
           />
-          <FormInput
-            label={t("pages.redemptions.clinicIdOptional")}
-            value={clinicId}
-            onChange={(event) => setClinicId(event.target.value)}
-          />
+          {isClinicLocked ? (
+            <FormInput
+              label={t("tables.clinic")}
+              value={lockedClinicName}
+              hint={t("pages.redemptions.clinicLockedHint")}
+              icon={Lock}
+              disabled
+              readOnly
+            />
+          ) : (
+            <SelectInput
+              label={t("tables.clinic")}
+              value={clinicId}
+              required
+              onChange={(event) => setClinicId(event.target.value)}
+              options={clinicSelectOptions}
+            />
+          )}
         </ModalForm>
       </Modal>
 

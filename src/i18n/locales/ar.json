@@ -151,6 +151,8 @@
     "address": "العنوان",
     "location": "الموقع",
     "clinicId": "معرف العيادة",
+    "selectClinic": "اختر عيادة",
+    "noClinicOptional": "بدون عيادة (اختياري)",
     "age": "العمر",
     "weight": "الوزن",
     "breed": "السلالة",
@@ -366,6 +368,10 @@
       "searchPlaceholder": "بحث بالرمز",
       "generateTitle": "إنشاء رموز QR",
       "exportExcel": "تصدير Excel",
+      "exportTitle": "تصدير رموز QR",
+      "exportBatchHint": "اتركه فارغًا لتضمين جميع الدفعات",
+      "exportDateFrom": "تاريخ الإنشاء من",
+      "exportDateTo": "تاريخ الإنشاء إلى",
       "generateBtn": "إنشاء رموز QR",
       "generated": "تم إنشاء رموز QR",
       "exported": "تم تصدير Excel",
@@ -455,6 +461,8 @@
       "verifyTitle": "التحقق من كود الاسترداد",
       "useTitle": "استخدام كود الاسترداد",
       "clinicIdOptional": "معرف العيادة (اختياري)",
+      "clinicRequired": "العيادة مطلوبة",
+      "clinicLockedHint": "مقفلة على عيادتك المعينة",
       "verified": "تم التحقق من الكود",
       "markedUsed": "تم تعليم الكود كمستخدم",
       "successTitle": "تم تحديث النقاط",
@@ -464,7 +472,8 @@
     },
     "clinics": {
       "title": "العيادات",
-      "subtitle": "إدارة العيادات وبياناتها"
+      "subtitle": "إدارة العيادات وبياناتها",
+      "passwordHint": "اختياري — ينشئ حساب دخول للوحة التحكم لهذه العيادة بصلاحية مسؤول العيادة"
     },
     "clinicDetails": {
       "title": "تفاصيل العيادة",
@@ -473,7 +482,8 @@
     },
     "doctors": {
       "title": "الأطباء",
-      "subtitle": "إدارة أطباء العيادات"
+      "subtitle": "إدارة أطباء العيادات",
+      "passwordHint": "اختياري — ينشئ حساب دخول للوحة التحكم لهذا الطبيب بصلاحية طبيب"
     },
     "doctorDetails": {
       "title": "تفاصيل الطبيب",

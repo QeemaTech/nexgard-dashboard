@@ -41,8 +41,20 @@ function ClinicsPage() {
           type: "select",
           defaultValue: "ACTIVE",
           options: statusOptions
+        },
+        {
+          name: "password",
+          label: t("pages.adminUsers.password"),
+          type: "password",
+          hint: t("pages.clinics.passwordHint"),
+          hideOnEdit: true
         }
       ]}
+      preparePayload={(form) => {
+        const payload = { ...form };
+        if (!payload.password) delete payload.password;
+        return payload;
+      }}
       searchPlaceholder={t("common.search")}
     />
   );

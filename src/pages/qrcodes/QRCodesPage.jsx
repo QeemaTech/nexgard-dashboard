@@ -29,6 +29,14 @@ const initialGenerate = {
   expiresAt: ""
 };
 
+const initialExportFilters = {
+  status: "",
+  productId: "",
+  batchCode: "",
+  dateFrom: "",
+  dateTo: ""
+};
+
 function QRCodesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -43,6 +51,8 @@ function QRCodesPage() {
   const [error, setError] = useState("");
   const [openGenerate, setOpenGenerate] = useState(false);
   const [generateForm, setGenerateForm] = useState(initialGenerate);
+  const [openExport, setOpenExport] = useState(false);
+  const [exportFilters, setExportFilters] = useState(initialExportFilters);
   const debouncedSearch = useDebounce(search);
 
   const loadProducts = useCallback(async () => {
@@ -100,11 +110,24 @@ function QRCodesPage() {
     }
   }
 
-  async function exportExcel() {
+  function openExportModal() {
+    setExportFilters({
+      ...initialExportFilters,
+      status,
+      productId
+    });
+    setOpenExport(true);
+  }
+
+  async function submitExport(event) {
+    event.preventDefault();
     try {
       const response = await qrcodesApi.exportExcel({
-        status: status || undefined,
-        productId: productId || undefined
+        status: exportFilters.status || undefined,
+        productId: exportFilters.productId || undefined,
+        batchCode: exportFilters.batchCode.trim() || undefined,
+        dateFrom: exportFilters.dateFrom || undefined,
+        dateTo: exportFilters.dateTo || undefined
       });
       const blob = new Blob([response.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -116,6 +139,7 @@ function QRCodesPage() {
       link.click();
       URL.revokeObjectURL(url);
       toast.success(t("pages.qrcodes.exported"));
+      setOpenExport(false);
     } catch (err) {
       toast.error(err.message);
     }
@@ -174,7 +198,7 @@ function QRCodesPage() {
         subtitle={t("pages.qrcodes.subtitle")}
         actions={
           <>
-            <Button variant="secondary" onClick={exportExcel}>
+            <Button variant="secondary" onClick={openExportModal}>
               {t("pages.qrcodes.exportExcel")}
             </Button>
             <Button onClick={() => setOpenGenerate(true)}>{t("pages.qrcodes.generateBtn")}</Button>
@@ -253,6 +277,49 @@ function QRCodesPage() {
             type="datetime-local"
             value={generateForm.expiresAt}
             onChange={(event) => setGenerateForm((prev) => ({ ...prev, expiresAt: event.target.value }))}
+          />
+        </ModalForm>
+      </Modal>
+
+      <Modal isOpen={openExport} title={t("pages.qrcodes.exportTitle")} onClose={() => setOpenExport(false)}>
+        <ModalForm
+          onSubmit={submitExport}
+          onCancel={() => setOpenExport(false)}
+          submitLabel={t("pages.qrcodes.exportExcel")}
+          cancelLabel={t("common.cancel")}
+        >
+          <SelectInput
+            label={t("tables.status")}
+            value={exportFilters.status}
+            onChange={(event) => setExportFilters((prev) => ({ ...prev, status: event.target.value }))}
+            options={qrStatusSelectOptions(t)}
+          />
+          <SelectInput
+            label={t("tables.product")}
+            value={exportFilters.productId}
+            onChange={(event) => setExportFilters((prev) => ({ ...prev, productId: event.target.value }))}
+            options={[
+              { label: t("filters.allProducts"), value: "" },
+              ...products.map((item) => ({ label: item.name, value: item.id }))
+            ]}
+          />
+          <FormInput
+            label={t("tables.batchCode")}
+            value={exportFilters.batchCode}
+            hint={t("pages.qrcodes.exportBatchHint")}
+            onChange={(event) => setExportFilters((prev) => ({ ...prev, batchCode: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.qrcodes.exportDateFrom")}
+            type="date"
+            value={exportFilters.dateFrom}
+            onChange={(event) => setExportFilters((prev) => ({ ...prev, dateFrom: event.target.value }))}
+          />
+          <FormInput
+            label={t("pages.qrcodes.exportDateTo")}
+            type="date"
+            value={exportFilters.dateTo}
+            onChange={(event) => setExportFilters((prev) => ({ ...prev, dateTo: event.target.value }))}
           />
         </ModalForm>
       </Modal>

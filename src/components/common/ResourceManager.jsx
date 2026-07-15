@@ -61,6 +61,7 @@ function renderField(field, value, onChange) {
       <FormInput
         label={field.label}
         type={field.type || "text"}
+        hint={field.hint}
         value={value ?? ""}
         onChange={(event) => onChange(field.name, event.target.value)}
       />
@@ -265,9 +266,11 @@ function ResourceManager({
           submitLabel={editingItem ? t("common.save") : t("common.addNew")}
           cancelLabel={t("common.cancel")}
         >
-          {formFields.map((field) =>
-            renderField(field, form[field.name], (name, value) => setForm((prev) => ({ ...prev, [name]: value })))
-          )}
+          {formFields
+            .filter((field) => !(editingItem && field.hideOnEdit))
+            .map((field) =>
+              renderField(field, form[field.name], (name, value) => setForm((prev) => ({ ...prev, [name]: value })))
+            )}
         </ModalForm>
       </Modal>
 
