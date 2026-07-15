@@ -38,7 +38,11 @@ function useRedeemRealtime({ onEvent } = {}) {
     function handleCreated(payload) {
       const name = payload?.user?.fullName || t("tables.user");
       const code = payload?.redeemCode?.code || payload?.code;
-      toast.success(`${name}: ${code || t("tables.code")}`);
+      if (payload?.phase === "points_charged") {
+        toast.success(`${name}: ${code || t("tables.code")} — points paid, ready to scan`);
+      } else {
+        toast.success(`${name}: ${code || t("tables.code")}`);
+      }
       onEventRef.current?.(REDEMPTION_EVENTS.CREATED, payload);
     }
 
@@ -47,8 +51,10 @@ function useRedeemRealtime({ onEvent } = {}) {
     }
 
     function handleUsed(payload) {
+      // Only real clinic scan — phase completed
+      if (payload?.phase && payload.phase !== "completed") return;
       const code = payload?.code || payload?.redeemCode?.code;
-      toast.success(code ? `${code} → USED` : "Redeem code used");
+      toast.success(code ? `${code} → scanned USED` : "Redeem code used at clinic");
       onEventRef.current?.(REDEMPTION_EVENTS.USED, payload);
     }
 

@@ -9,10 +9,15 @@
  *
  * Rooms joined automatically by server: user:{userId}
  *
- * Listen:
- *   socket.on("socket:ready", ...)
- *   socket.on("redemption:confirmed", ...)  // after user redeems (points deducted)
- *   socket.on("redemption:used", ...)       // after doctor marks code USED
+ * Events:
+ *   redemption:confirmed  → Step 1 POST /rewards/:id/redeem
+ *                           phase:"issued"  step:1  pointsDeducted:false
+ *   redemption:used       → Step 2 from clinic/admin, OR other devices
+ *                           phase:"completed" step:2
+ *                           NOTE: same-device /redeem/confirm uses HTTP body;
+ *                           user-room socket echo is skipped to avoid event clash.
+ *
+ * Always key UI updates by payload.redemptionId + payload.seq / payload.phase.
  */
 
 export const MOBILE_REDEMPTION_EVENTS = {
@@ -25,7 +30,7 @@ export function createUserSocketExample() {
   return `
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000", {
+const socket = io("https://nexgard.nodeteam.site", {
   path: "/socket.io",
   auth: {
     token: USER_ACCESS_TOKEN,
@@ -33,18 +38,35 @@ const socket = io("http://localhost:5000", {
   }
 });
 
+let lastSeqByRedemption = {};
+
+function shouldApply(payload) {
+  const id = payload.redemptionId;
+  const seq = payload.seq || 0;
+  if (!id) return true;
+  if ((lastSeqByRedemption[id] || 0) >= seq) return false; // stale / duplicate
+  lastSeqByRedemption[id] = seq;
+  return true;
+}
+
 socket.on("socket:ready", (data) => {
   console.log("joined rooms", data.rooms);
 });
 
+// Step 1 — code created, NO points deducted yet
 socket.on("redemption:confirmed", (payload) => {
-  // Update wallet + show redeem code / QR
-  // payload.walletBalance, payload.redeemCode.code
+  if (payload.phase !== "issued" && payload.step !== 1) return;
+  if (!shouldApply(payload)) return;
+  // show QR / code — do NOT treat as deducted
+  // payload.redeemCode, payload.pointsPending, payload.walletBalance
 });
 
+// Step 2 — completed (usually from clinic; or another device)
 socket.on("redemption:used", (payload) => {
-  // Mark redemption as USED on the user screen
-  // payload.code, payload.status === "USED"
+  if (payload.phase !== "completed" && payload.step !== 2) return;
+  if (!shouldApply(payload)) return;
+  // update wallet / mark used
+  // payload.pointsCharged, payload.walletBalance
 });
 `.trim();
 }

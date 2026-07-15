@@ -224,7 +224,7 @@ function RedemptionsPage() {
           />
         </ModalForm>
         {verifyResult ? (
-          <div className="mt-4 rounded border border-slate-200 p-3 text-sm">
+          <div className="mt-4 rounded border border-slate-200 p-3 text-sm space-y-1">
             <p>
               <span className="font-medium">{t("tables.status")}:</span> {tStatus(t, verifyResult.status)}
             </p>
@@ -232,6 +232,13 @@ function RedemptionsPage() {
               <span className="font-medium">{t("common.canUse")}:</span>{" "}
               {verifyResult.canUse ? t("common.yes") : t("common.no")}
             </p>
+            <p>
+              <span className="font-medium">Points paid:</span>{" "}
+              {verifyResult.pointsPaid ? t("common.yes") : t("common.no")}
+            </p>
+            {verifyResult.reason ? (
+              <p className="text-slate-600">{verifyResult.reason}</p>
+            ) : null}
             <p>
               <span className="font-medium">{t("tables.reward")}:</span> {verifyResult.reward?.title || "-"}
             </p>
