@@ -578,6 +578,7 @@
       "appName": "اسم التطبيق",
       "pointsExpiryDays": "أيام انتهاء النقاط",
       "redeemCodeExpiryDays": "أيام انتهاء كود الاسترداد",
+      "redeemCodeExpiryWarningDays": "أيام التنبيه قبل انتهاء كود الاسترداد",
       "maxScansPerDay": "الحد الأقصى للمسح يومياً",
       "supportEmail": "بريد الدعم",
       "defaultLanguage": "اللغة الافتراضية",

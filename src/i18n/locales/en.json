@@ -580,6 +580,7 @@
       "appName": "App Name",
       "pointsExpiryDays": "Points Expiry Days",
       "redeemCodeExpiryDays": "Redeem Code Expiry Days",
+      "redeemCodeExpiryWarningDays": "Redeem Expiry Warning Days",
       "maxScansPerDay": "Max Scans Per Day",
       "supportEmail": "Support Email",
       "defaultLanguage": "Default Language",
