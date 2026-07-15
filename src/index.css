@@ -2132,13 +2132,188 @@ html[data-theme="light"] .logo-mark {
   .login-success-overlay__track-fill,
   .not-found__digit,
   .not-found__mark,
-  .not-found__code-glow {
+  .not-found__code-glow,
+  .redemption-success-card__badge {
     animation: none !important;
   }
 
   .login-success-overlay__track-fill {
     transform: none;
     width: 100%;
+  }
+}
+
+/* Redemption success card */
+.redemption-success-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: min(100%, 26rem);
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 2.25rem 2rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.redemption-success-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% -10%, var(--success-soft) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.redemption-success-card__close {
+  position: absolute;
+  top: 0.85rem;
+  inset-inline-end: 0.85rem;
+  z-index: 2;
+  display: grid;
+  height: 2rem;
+  width: 2rem;
+  place-items: center;
+  border-radius: 9999px;
+  color: var(--muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.redemption-success-card__close:hover {
+  background-color: var(--surface-muted);
+  color: var(--fg);
+}
+
+.redemption-success-card__badge {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  height: 4rem;
+  width: 4rem;
+  margin-bottom: 1.25rem;
+  place-items: center;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--success) 0%, #22c55e 100%);
+  color: #fff;
+  box-shadow: 0 10px 24px var(--success-soft);
+  animation: redemptionBadgeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.redemption-success-card__title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.redemption-success-card__subtitle {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.redemption-success-card__user {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.redemption-success-card__points {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  border-radius: calc(var(--radius-card) - 0.35rem);
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+  padding: 1.1rem 1rem;
+}
+
+.redemption-success-card__points-col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.redemption-success-card__points-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.redemption-success-card__points-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--fg);
+}
+
+.redemption-success-card__points-col--after .redemption-success-card__points-value {
+  color: var(--success);
+}
+
+.redemption-success-card__points-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--accent);
+}
+
+.redemption-success-card__points-chip {
+  white-space: nowrap;
+  border-radius: 9999px;
+  background: var(--danger-soft);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.redemption-success-card__no-points {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.redemption-success-card__done {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 1.75rem;
+}
+
+@keyframes redemptionBadgeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
   }
 }
 

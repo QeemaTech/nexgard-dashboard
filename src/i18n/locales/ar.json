@@ -100,6 +100,7 @@
     "view": "عرض",
     "open": "فتح",
     "close": "إغلاق",
+    "done": "تم",
     "home": "الرئيسية",
     "saving": "جارٍ الحفظ...",
     "generate": "إنشاء",
@@ -418,7 +419,11 @@
       "useTitle": "استخدام كود الاسترداد",
       "clinicIdOptional": "معرف العيادة (اختياري)",
       "verified": "تم التحقق من الكود",
-      "markedUsed": "تم تعليم الكود كمستخدم"
+      "markedUsed": "تم تعليم الكود كمستخدم",
+      "successTitle": "تم تحديث النقاط",
+      "pointsBefore": "قبل",
+      "pointsAfter": "بعد",
+      "noPointsChange": "لا يوجد تغيير في النقاط لهذه العملية"
     },
     "clinics": {
       "title": "العيادات",

@@ -100,6 +100,7 @@
     "view": "View",
     "open": "Open",
     "close": "Close",
+    "done": "Done",
     "home": "Home",
     "saving": "Saving...",
     "generate": "Generate",
@@ -418,7 +419,11 @@
       "useTitle": "Use Redeem Code",
       "clinicIdOptional": "Clinic ID (optional)",
       "verified": "Code verified",
-      "markedUsed": "Code marked as used"
+      "markedUsed": "Code marked as used",
+      "successTitle": "Points Updated",
+      "pointsBefore": "Before",
+      "pointsAfter": "After",
+      "noPointsChange": "No points change for this redemption"
     },
     "clinics": {
       "title": "Clinics",

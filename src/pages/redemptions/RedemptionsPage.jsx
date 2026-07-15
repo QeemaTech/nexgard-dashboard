@@ -15,6 +15,7 @@ import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
 import Modal from "../../components/modals/Modal";
 import ModalForm from "../../components/modals/ModalForm";
+import RedemptionSuccessModal from "../../components/modals/RedemptionSuccessModal";
 import { redemptionStatusSelectOptions, tStatus } from "../../utils/i18nHelpers";
 import { formatDateTime } from "../../utils/formatDate";
 
@@ -33,6 +34,7 @@ function RedemptionsPage() {
   const [codeInput, setCodeInput] = useState("");
   const [clinicId, setClinicId] = useState("");
   const [verifyResult, setVerifyResult] = useState(null);
+  const [successResult, setSuccessResult] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -93,11 +95,12 @@ function RedemptionsPage() {
       return;
     }
     try {
-      await redeemApi.useCode({ code, clinicId: clinicId.trim() || undefined });
+      const response = await redeemApi.useCode({ code, clinicId: clinicId.trim() || undefined });
       toast.success(t("pages.redemptions.markedUsed"));
       setUseModal(false);
       setCodeInput("");
       setClinicId("");
+      setSuccessResult(response.data.data);
       load();
     } catch (err) {
       toast.error(err.message);
@@ -217,6 +220,12 @@ function RedemptionsPage() {
           />
         </ModalForm>
       </Modal>
+
+      <RedemptionSuccessModal
+        isOpen={Boolean(successResult)}
+        onClose={() => setSuccessResult(null)}
+        data={successResult}
+      />
     </section>
   );
 }
