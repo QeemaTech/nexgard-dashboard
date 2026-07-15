@@ -9,12 +9,14 @@ import DashboardFooter from "../components/layout/DashboardFooter";
 import AnimatedPage from "../components/motion/AnimatedPage";
 import usePermissions from "../hooks/usePermissions";
 import useTranslation from "../hooks/useTranslation";
+import useRedeemRealtime from "../hooks/useRedeemRealtime";
 import { SIDEBAR_ITEMS } from "../utils/constants";
 
 function AdminLayout() {
   const { t } = useTranslation();
   const { hasAnyPermission } = usePermissions();
   const location = useLocation();
+  useRedeemRealtime();
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const sidebarItems = useMemo(

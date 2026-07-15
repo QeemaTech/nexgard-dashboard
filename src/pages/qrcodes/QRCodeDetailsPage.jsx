@@ -130,6 +130,36 @@ function QRCodeDetailsPage() {
               }
             />
             <DetailRow label={t("tables.date")} value={formatDateTime(data.createdAt)} />
+
+            <div className="mt-8">
+              <h3 className="mb-4 text-lg font-semibold text-slate-800">{t("pages.qrcodeDetails.scanHistory")}</h3>
+              {data.scanTransactions?.length ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-left text-slate-500">
+                        <th className="py-2 pr-4">{t("tables.user")}</th>
+                        <th className="py-2 pr-4">{t("tables.status")}</th>
+                        <th className="py-2 pr-4">{t("tables.date")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.scanTransactions.map((scan) => (
+                        <tr key={scan.id} className="border-b border-slate-100">
+                          <td className="py-2 pr-4">{scan.user?.fullName || "-"}</td>
+                          <td className="py-2 pr-4">
+                            <StatusBadge value={scan.status} />
+                          </td>
+                          <td className="py-2 pr-4">{formatDateTime(scan.scannedAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500">{t("pages.qrcodeDetails.noScanHistory")}</p>
+              )}
+            </div>
           </div>
         </div>
       ) : null}

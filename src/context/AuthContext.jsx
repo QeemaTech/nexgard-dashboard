@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import authApi from "../api/authApi";
 import { tokenStorage } from "../api/axiosClient";
+import { disconnectAdminSocket } from "../realtime/socketClient";
 
 export const AuthContext = createContext(null);
 
@@ -61,6 +62,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       // ignore logout request errors and clear local auth state
     } finally {
+      disconnectAdminSocket();
       tokenStorage.clear();
       setAdmin(null);
       setLoading(false);

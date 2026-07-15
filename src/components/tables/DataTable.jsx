@@ -23,6 +23,14 @@ function getCellClassName(col) {
   return classes.join(" ");
 }
 
+function getRowKey(row, rowIndex, keyField) {
+  const value = row?.[keyField];
+  if (value !== undefined && value !== null && value !== "") {
+    return String(value);
+  }
+  return `row-${rowIndex}`;
+}
+
 function DataTable({ columns, rows, keyField = "id", meta, onPageChange }) {
   const reduced = useReducedMotion();
 
@@ -55,9 +63,12 @@ function DataTable({ columns, rows, keyField = "id", meta, onPageChange }) {
             </tr>
           </thead>
           <tbody className="table-body divide-y table-divider">
-            {rows.map((row, rowIndex) => (
+            {rows.map((row, rowIndex) => {
+              const rowKey = getRowKey(row, rowIndex, keyField);
+
+              return (
               <RowTag
-                key={row[keyField]}
+                key={rowKey}
                 className="table-row"
                 initial={reduced ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -67,14 +78,15 @@ function DataTable({ columns, rows, keyField = "id", meta, onPageChange }) {
                 }}
               >
                 {columns.map((col) => (
-                  <td key={`${row[keyField]}-${col.key}`} className={getCellClassName(col)}>
+                  <td key={`${rowKey}-${col.key}`} className={getCellClassName(col)}>
                     {col.render ? col.render(row) : row[col.key] ?? (
                       <span className="text-muted">—</span>
                     )}
                   </td>
                 ))}
               </RowTag>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

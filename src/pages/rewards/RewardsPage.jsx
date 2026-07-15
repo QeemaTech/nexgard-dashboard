@@ -118,12 +118,34 @@ function RewardsPage() {
     setEditing(row);
     setForm({
       ...initialForm,
-      ...row,
+      title: row.title || "",
+      description: row.description || "",
+      termsAndConditions: row.termsAndConditions || "",
+      requiredPoints: row.requiredPoints ?? 0,
+      status: row.status || "ACTIVE",
+      image: row.image || "",
+      maxRedemptions: row.maxRedemptions == null ? "" : String(row.maxRedemptions),
+      perUserLimit: row.perUserLimit == null ? "" : String(row.perUserLimit),
       startsAt: row.startsAt ? row.startsAt.slice(0, 16) : "",
       endsAt: row.endsAt ? row.endsAt.slice(0, 16) : ""
     });
     setImageFile(null);
     setModalOpen(true);
+  }
+
+  function buildRewardPayload() {
+    return {
+      title: form.title,
+      description: form.description,
+      termsAndConditions: form.termsAndConditions || null,
+      requiredPoints: Number(form.requiredPoints || 0),
+      status: form.status,
+      image: form.image || null,
+      maxRedemptions: form.maxRedemptions === "" ? null : Number(form.maxRedemptions),
+      perUserLimit: form.perUserLimit === "" ? null : Number(form.perUserLimit),
+      startsAt: form.startsAt || null,
+      endsAt: form.endsAt || null
+    };
   }
 
   async function reloadRewards() {
@@ -153,18 +175,16 @@ function RewardsPage() {
   async function submit(event) {
     event.preventDefault();
     try {
-      const payload = {
-        ...form,
-        requiredPoints: Number(form.requiredPoints || 0),
-        maxRedemptions: form.maxRedemptions === "" ? null : Number(form.maxRedemptions),
-        perUserLimit: form.perUserLimit === "" ? null : Number(form.perUserLimit),
-        startsAt: form.startsAt || null,
-        endsAt: form.endsAt || null
-      };
+      const payload = buildRewardPayload();
       if (imageFile) {
         const formData = new FormData();
         Object.entries(payload).forEach(([key, value]) => {
-          if (value !== null && value !== undefined) formData.append(key, value);
+          // Empty string clears nullable limits (maxRedemptions / perUserLimit → null on server)
+          if (value === null || value === undefined) {
+            formData.append(key, "");
+            return;
+          }
+          formData.append(key, value);
         });
         formData.append("imageFile", imageFile);
         if (editing) await rewardsApi.update(editing.id, formData, true);
@@ -220,6 +240,16 @@ function RewardsPage() {
     () => [
       { key: "title", header: t("tables.title") },
       { key: "requiredPoints", header: t("tables.requiredPoints") },
+      {
+        key: "maxRedemptions",
+        header: t("pages.rewards.maxRedemptions"),
+        render: (row) => (row.maxRedemptions == null ? t("pages.rewards.unlimited") : row.maxRedemptions)
+      },
+      {
+        key: "perUserLimit",
+        header: t("pages.rewards.perUserLimit"),
+        render: (row) => (row.perUserLimit == null ? t("pages.rewards.unlimited") : row.perUserLimit)
+      },
       { key: "status", header: t("tables.status"), render: (row) => <StatusBadge value={row.status} /> },
       {
         key: "clinics",
@@ -360,12 +390,18 @@ function RewardsPage() {
           <FormInput
             label={t("pages.rewards.maxRedemptions")}
             type="number"
+            min="1"
+            placeholder={t("pages.rewards.unlimited")}
+            hint={t("pages.rewards.maxRedemptionsHint")}
             value={form.maxRedemptions}
             onChange={(event) => setForm((prev) => ({ ...prev, maxRedemptions: event.target.value }))}
           />
           <FormInput
             label={t("pages.rewards.perUserLimit")}
             type="number"
+            min="1"
+            placeholder={t("pages.rewards.unlimited")}
+            hint={t("pages.rewards.perUserLimitHint")}
             value={form.perUserLimit}
             onChange={(event) => setForm((prev) => ({ ...prev, perUserLimit: event.target.value }))}
           />

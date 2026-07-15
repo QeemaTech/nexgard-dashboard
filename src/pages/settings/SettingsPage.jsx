@@ -12,6 +12,7 @@ const initialForm = {
   appName: "",
   pointsExpiryDays: "",
   redeemCodeExpiryDays: "",
+  redeemCodeExpiryWarningDays: "",
   maxScansPerDay: "",
   supportEmail: "",
   defaultLanguage: ""
@@ -50,6 +51,7 @@ function SettingsPage() {
         appName: form.appName,
         pointsExpiryDays: Number(form.pointsExpiryDays),
         redeemCodeExpiryDays: Number(form.redeemCodeExpiryDays),
+        redeemCodeExpiryWarningDays: Number(form.redeemCodeExpiryWarningDays),
         maxScansPerDay: Number(form.maxScansPerDay),
         supportEmail: form.supportEmail,
         defaultLanguage: form.defaultLanguage
@@ -74,7 +76,7 @@ function SettingsPage() {
             value={form.appName}
             onChange={(event) => setForm((prev) => ({ ...prev, appName: event.target.value }))}
           />
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <FormInput
               label={t("pages.settings.pointsExpiryDays")}
               type="number"
@@ -86,6 +88,14 @@ function SettingsPage() {
               type="number"
               value={form.redeemCodeExpiryDays}
               onChange={(event) => setForm((prev) => ({ ...prev, redeemCodeExpiryDays: event.target.value }))}
+            />
+            <FormInput
+              label={t("pages.settings.redeemCodeExpiryWarningDays")}
+              type="number"
+              value={form.redeemCodeExpiryWarningDays}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, redeemCodeExpiryWarningDays: event.target.value }))
+              }
             />
             <FormInput
               label={t("pages.settings.maxScansPerDay")}

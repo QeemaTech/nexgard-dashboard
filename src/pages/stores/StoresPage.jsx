@@ -20,6 +20,7 @@ function StoresPage() {
         update: ["stores.update"],
         delete: ["stores.delete"]
       }}
+      getDetailPath={(row) => `/app/stores/${row.id}`}
       columns={[
         { key: "name", header: t("tables.name") },
         { key: "email", header: t("tables.email") },

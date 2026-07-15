@@ -68,6 +68,13 @@ export const SIDEBAR_ITEMS = [
     icon: "QrCode"
   },
   {
+    labelKey: "nav.scans",
+    shortLabel: "SC",
+    path: "/app/scans",
+    permissions: ["scans.view"],
+    icon: "ScanLine"
+  },
+  {
     labelKey: "nav.points",
     shortLabel: "PO",
     path: "/app/points",

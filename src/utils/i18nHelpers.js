@@ -36,6 +36,10 @@ export function qrStatusSelectOptions(t) {
   );
 }
 
+export function scanStatusSelectOptions(t) {
+  return statusSelectOptions(t, ["PENDING", "APPROVED", "REJECTED"], "filters.allStatuses");
+}
+
 export function rewardStatusSelectOptions(t) {
   return statusSelectOptions(t, ["ACTIVE", "INACTIVE", "EXPIRED"], "filters.allStatuses");
 }

@@ -16,6 +16,7 @@ import { downloadReportExcel } from "../../utils/exportReportExcel";
 function normalizeRows(data = {}) {
   if (Array.isArray(data.byStatus)) {
     return data.byStatus.map((item) => ({
+      id: item.status,
       metric: item.status,
       count: item._count?.status || 0,
       value: item._count?.status || 0
@@ -23,6 +24,7 @@ function normalizeRows(data = {}) {
   }
   if (Array.isArray(data.byType)) {
     return data.byType.map((item) => ({
+      id: item.type,
       metric: item.type,
       count: item._count?.type || 0,
       sumPoints: item._sum?.points || 0,
