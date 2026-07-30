@@ -18,12 +18,18 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data?.errors?.[0] ||
-      error.message ||
-      "Request failed";
-    return Promise.reject(new Error(message));
+    const payload = error?.response?.data;
+    const message = payload?.message || payload?.errors?.[0] || error.message || "Request failed";
+
+    // Keep the API error contract on the rejected Error so callers can branch on
+    // `code` and highlight the offending input via `field`.
+    const normalizedError = new Error(message);
+    normalizedError.status = error?.response?.status || null;
+    normalizedError.code = payload?.code || null;
+    normalizedError.field = payload?.field || null;
+    normalizedError.errors = Array.isArray(payload?.errors) ? payload.errors : [];
+
+    return Promise.reject(normalizedError);
   }
 );
 

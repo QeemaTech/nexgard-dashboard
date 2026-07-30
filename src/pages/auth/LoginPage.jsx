@@ -34,9 +34,20 @@ function LoginPage() {
       setNextPath(getDefaultDashboardPath(admin?.permissions || []));
       setShowSuccess(true);
     } catch (error) {
-      toast.error(error.message);
+      // Backend returns `code` (machine-readable) and `field` (email | password),
+      // so the message lands on the input that actually failed.
+      const message = error.code ? t(`auth.errors.${error.code}`, error.message) : error.message;
+      const field = error.field === "email" || error.field === "password" ? error.field : null;
+
+      setErrors(field ? { [field]: message } : {});
+      toast.error(message);
       setLoading(false);
     }
+  }
+
+  function handleFieldChange(field, value) {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
   }
 
   function handleSuccessComplete() {
@@ -79,7 +90,7 @@ function LoginPage() {
             value={form.email}
             error={errors.email}
             icon={Mail}
-            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+            onChange={(event) => handleFieldChange("email", event.target.value)}
           />
           <FormInput
             label={t("auth.password")}
@@ -88,7 +99,7 @@ function LoginPage() {
             value={form.password}
             error={errors.password}
             icon={LockKeyhole}
-            onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+            onChange={(event) => handleFieldChange("password", event.target.value)}
           />
           <Button type="submit" disabled={loading} className="auth-submit mt-2 w-full py-4 uppercase tracking-widest">
             {t("auth.signIn")}

@@ -62,7 +62,19 @@
     "openingDashboard": "Opening your dashboard...",
     "checkingSession": "Checking session...",
     "emailRequired": "Email is required",
-    "passwordRequired": "Password is required"
+    "passwordRequired": "Password is required",
+    "errors": {
+      "EMAIL_NOT_FOUND": "No admin account is registered with this email address",
+      "INVALID_PASSWORD": "The password you entered is incorrect",
+      "ACCOUNT_SUSPENDED": "This admin account is suspended. Please contact the super admin.",
+      "ACCOUNT_INACTIVE": "This admin account is not active. Please contact the super admin.",
+      "ACCOUNT_DELETED": "This admin account has been deleted",
+      "TOKEN_EXPIRED": "Your session has expired. Please log in again.",
+      "TOKEN_INVALID": "Your session is no longer valid. Please log in again.",
+      "TOKEN_MISSING": "Please log in to continue",
+      "VALIDATION_ERROR": "Please check the entered data",
+      "TOO_MANY_REQUESTS": "Too many login attempts. Please try again later."
+    }
   },
   "notFound": {
     "title": "Page not found",
