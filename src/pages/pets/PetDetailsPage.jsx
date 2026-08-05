@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, PawPrint, Pencil, UserRound } from "lucide-react";
 import petsApi from "../../api/petsApi";
 import useTranslation from "../../hooks/useTranslation";
 import usePermissions from "../../hooks/usePermissions";
+import usePetOptions, { petOptionLabel } from "../../hooks/usePetOptions";
 import PageHeader from "../../components/common/PageHeader";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
@@ -69,9 +70,10 @@ function GenderPills({ value, t }) {
 }
 
 function PetDetailsPage() {
-  const { t } = useTranslation();
+  const { t, isRtl } = useTranslation();
   const navigate = useNavigate();
   const { hasAnyPermission } = usePermissions();
+  const { weightOptions, ageOptions } = usePetOptions();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -115,15 +117,15 @@ function PetDetailsPage() {
     setEditing(true);
   }
 
+  // Range labels come from the admin-managed options; the numeric columns are
+  // only a fallback for pets created before the dropdowns existed.
   const ageLabel =
-    data?.age != null
-      ? t("pages.petDetails.ageYears", { count: data.age })
-      : "-";
+    petOptionLabel(data?.ageRange, isRtl) ||
+    (data?.age != null ? t("pages.petDetails.ageYears", { count: data.age }) : "-");
 
   const weightLabel =
-    data?.weight != null
-      ? t("pages.petDetails.weightValue", { value: data.weight })
-      : "-";
+    petOptionLabel(data?.weightRange, isRtl) ||
+    (data?.weight != null ? t("pages.petDetails.weightValue", { value: data.weight }) : "-");
 
   return (
     <section>
@@ -221,8 +223,12 @@ function PetDetailsPage() {
                 <DetailField label={t("pages.petDetails.gender")}>
                   <GenderPills value={data.gender} t={t} />
                 </DetailField>
-                <DetailField label={t("pages.petDetails.age")} value={ageLabel} muted={data.age == null} />
-                <DetailField label={t("pages.petDetails.weight")} value={weightLabel} muted={data.weight == null} />
+                <DetailField label={t("pages.petDetails.age")} value={ageLabel} muted={ageLabel === "-"} />
+                <DetailField
+                  label={t("pages.petDetails.weight")}
+                  value={weightLabel}
+                  muted={weightLabel === "-"}
+                />
                 <DetailField label={t("pages.petDetails.vetName")} value={data.vetName} muted={!data.vetName} />
               </div>
             </div>
@@ -265,7 +271,13 @@ function PetDetailsPage() {
           submitLabel={t("common.save")}
           cancelLabel={t("common.cancel")}
         >
-          <PetEditForm form={form} setForm={setForm} t={t} />
+          <PetEditForm
+            form={form}
+            setForm={setForm}
+            t={t}
+            weightOptions={weightOptions}
+            ageOptions={ageOptions}
+          />
         </ModalForm>
       </Modal>
     </section>

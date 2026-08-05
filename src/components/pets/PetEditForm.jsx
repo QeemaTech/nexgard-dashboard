@@ -2,8 +2,9 @@ import FormInput from "../forms/FormInput";
 import SelectInput from "../forms/SelectInput";
 import TextArea from "../forms/TextArea";
 import { formGenderOptions, formPetTypeOptions } from "../../utils/i18nHelpers";
+import { rangeSelectOptions } from "../../utils/petForm";
 
-function PetEditForm({ form, setForm, t }) {
+function PetEditForm({ form, setForm, t, weightOptions = [], ageOptions = [] }) {
   return (
     <>
       <FormInput
@@ -34,20 +35,17 @@ function PetEditForm({ form, setForm, t }) {
         onChange={(event) => setForm((prev) => ({ ...prev, gender: event.target.value }))}
         options={formGenderOptions(t)}
       />
-      <FormInput
+      <SelectInput
         label={t("pages.petDetails.age")}
-        type="number"
-        min="0"
-        value={form.age}
-        onChange={(event) => setForm((prev) => ({ ...prev, age: event.target.value }))}
+        value={form.ageRangeId}
+        onChange={(event) => setForm((prev) => ({ ...prev, ageRangeId: event.target.value }))}
+        options={rangeSelectOptions(t, ageOptions)}
       />
-      <FormInput
+      <SelectInput
         label={t("pages.petDetails.weight")}
-        type="number"
-        min="0"
-        step="0.1"
-        value={form.weight}
-        onChange={(event) => setForm((prev) => ({ ...prev, weight: event.target.value }))}
+        value={form.weightRangeId}
+        onChange={(event) => setForm((prev) => ({ ...prev, weightRangeId: event.target.value }))}
+        options={rangeSelectOptions(t, weightOptions)}
       />
       <FormInput
         label={t("pages.petDetails.vetName")}

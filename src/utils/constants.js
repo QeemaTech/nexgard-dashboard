@@ -54,6 +54,13 @@ export const SIDEBAR_ITEMS = [
     icon: "Heart"
   },
   {
+    labelKey: "nav.petOptions",
+    shortLabel: "OP",
+    path: "/app/pet-options",
+    permissions: ["pets.view"],
+    icon: "SlidersHorizontal"
+  },
+  {
     labelKey: "nav.products",
     shortLabel: "PR",
     path: "/app/products",

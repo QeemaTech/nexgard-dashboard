@@ -83,7 +83,9 @@ function ResourceManager({
   disableCreate = false,
   getDetailPath,
   mapRowToForm,
-  preparePayload
+  preparePayload,
+  headerActions = null,
+  renderForm = null
 }) {
   const navigate = useNavigate();
   const { hasAnyPermission } = usePermissions();
@@ -216,17 +218,22 @@ function ResourceManager({
         title={title}
         subtitle={subtitle}
         actions={
-          canCreate ? (
-            <Button
-              onClick={() => {
-                setEditingItem(null);
-                setForm(buildInitialForm(formFields));
-                setOpenModal(true);
-              }}
-            >
-              <Plus className="h-5 w-5" />
-              {t("common.addNew")}
-            </Button>
+          headerActions || canCreate ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {headerActions}
+              {canCreate ? (
+                <Button
+                  onClick={() => {
+                    setEditingItem(null);
+                    setForm(buildInitialForm(formFields));
+                    setOpenModal(true);
+                  }}
+                >
+                  <Plus className="h-5 w-5" />
+                  {t("common.addNew")}
+                </Button>
+              ) : null}
+            </div>
           ) : null
         }
       />
@@ -266,11 +273,15 @@ function ResourceManager({
           submitLabel={editingItem ? t("common.save") : t("common.addNew")}
           cancelLabel={t("common.cancel")}
         >
-          {formFields
-            .filter((field) => !(editingItem && field.hideOnEdit))
-            .map((field) =>
-              renderField(field, form[field.name], (name, value) => setForm((prev) => ({ ...prev, [name]: value })))
-            )}
+          {renderForm
+            ? renderForm({ form, setForm, editingItem })
+            : formFields
+                .filter((field) => !(editingItem && field.hideOnEdit))
+                .map((field) =>
+                  renderField(field, form[field.name], (name, value) =>
+                    setForm((prev) => ({ ...prev, [name]: value }))
+                  )
+                )}
         </ModalForm>
       </Modal>
 

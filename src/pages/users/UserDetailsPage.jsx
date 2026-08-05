@@ -17,6 +17,7 @@ import {
 import usersApi from "../../api/usersApi";
 import useTranslation from "../../hooks/useTranslation";
 import usePermissions from "../../hooks/usePermissions";
+import { petOptionLabel } from "../../hooks/usePetOptions";
 import PageHeader from "../../components/common/PageHeader";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import ErrorState from "../../components/common/ErrorState";
@@ -82,7 +83,7 @@ function SocialLinkValue({ href }) {
 }
 
 function UserDetailsPage() {
-  const { t } = useTranslation();
+  const { t, isRtl } = useTranslation();
   const navigate = useNavigate();
   const { hasAnyPermission } = usePermissions();
   const { id } = useParams();
@@ -137,10 +138,18 @@ function UserDetailsPage() {
       { key: "type", header: t("tables.type"), render: (row) => tStatus(t, row.type) },
       { key: "breed", header: t("tables.breed"), render: (row) => row.breed || "-" },
       { key: "gender", header: t("tables.gender"), render: (row) => tStatus(t, row.gender) },
-      { key: "age", header: t("tables.age"), render: (row) => (row.age != null ? row.age : "-") },
-      { key: "weight", header: t("tables.weight"), render: (row) => (row.weight != null ? row.weight : "-") }
+      {
+        key: "ageRange",
+        header: t("tables.age"),
+        render: (row) => petOptionLabel(row.ageRange, isRtl) || (row.age != null ? row.age : "-")
+      },
+      {
+        key: "weightRange",
+        header: t("tables.weight"),
+        render: (row) => petOptionLabel(row.weightRange, isRtl) || (row.weight != null ? row.weight : "-")
+      }
     ],
-    [t]
+    [t, isRtl]
   );
 
   const scansColumns = useMemo(

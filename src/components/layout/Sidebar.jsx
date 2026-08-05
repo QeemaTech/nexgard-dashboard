@@ -16,6 +16,7 @@ import {
   ScanLine,
   Settings,
   Shield,
+  SlidersHorizontal,
   Stethoscope,
   Store,
   Ticket,
@@ -47,7 +48,8 @@ const ICONS = {
   FileText,
   UserCog,
   Shield,
-  Settings
+  Settings,
+  SlidersHorizontal
 };
 
 function SidebarItem({ item, collapsed, onNavigate }) {

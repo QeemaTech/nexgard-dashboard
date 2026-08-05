@@ -13,6 +13,7 @@ const UsersListPage = lazyPage(() => import("../pages/users/UsersListPage"), "na
 const UserDetailsPage = lazyPage(() => import("../pages/users/UserDetailsPage"), "pages.userDetails.title");
 const PetsListPage = lazyPage(() => import("../pages/pets/PetsListPage"), "nav.pets");
 const PetDetailsPage = lazyPage(() => import("../pages/pets/PetDetailsPage"), "pages.petDetails.title");
+const PetOptionsPage = lazyPage(() => import("../pages/pets/PetOptionsPage"), "nav.petOptions");
 const ProductsListPage = lazyPage(() => import("../pages/products/ProductsListPage"), "nav.products");
 const ProductDetailsPage = lazyPage(() => import("../pages/products/ProductDetailsPage"), "pages.productDetails.title");
 const QRCodesPage = lazyPage(() => import("../pages/qrcodes/QRCodesPage"), "nav.qrcodes");
@@ -64,6 +65,7 @@ function AppRoutes() {
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["pets.view"]} />}>
             <Route path="pets" element={<PetsListPage />} />
+            <Route path="pet-options" element={<PetOptionsPage />} />
             <Route path="pets/:id" element={<PetDetailsPage />} />
           </Route>
           <Route element={<ProtectedRoute requiredPermissions={["products.view"]} />}>
